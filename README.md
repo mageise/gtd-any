@@ -80,11 +80,27 @@ src/
 - [ ] Dark/Light mode toggle (currently system-only)
 - [ ] Widget animations
 - [ ] Keyboard shortcuts
-- [ ] PWA support (offline-first)
 
 ## Tech Stack
 - React 18
 - TypeScript
 - Vite
 - Tailwind CSS v4
+- PWA (vite-plugin-pwa)
 - localStorage (no backend)
+
+## PWA Installation
+
+This app is a Progressive Web App and can be installed on your device:
+
+### iPhone (Safari)
+1. Open https://mageise.github.io/gtd-any/ in Safari
+2. Tap the Share button (📤)
+3. Scroll down and tap "Add to Home Screen"
+4. Tap "Add"
+
+### Android (Chrome)
+1. Open https://mageise.github.io/gtd-any/ in Chrome
+2. Tap the menu (⋮)
+3. Tap "Add to Home Screen"
+4. Tap "Install"

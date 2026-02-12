@@ -5,10 +5,10 @@ A beautiful, mobile-first personal dashboard with 5 productivity widgets. Built 
 ## Widgets (in order)
 
 1. **Daily Quote** - Inspirational quote that refreshes each day (API: quotable.io, fallback to local array)
-2. **Time Blocks** - 3 preset time blocks with Pomodoro-style timers (editable titles)
-3. **Inbox Zero** - Quick capture for thoughts/tasks → graduate to tasks or delete
-4. **Today's Tasks** - Checklist with completion tracking, connected to Inbox
-5. **Finance** - Live BTC price (CoinGecko API), auto-refreshes every 5 minutes
+2. **Inbox Zero** - Quick capture → graduate to tasks or delete (inline editing)
+3. **Today's Tasks** - Checklist with completion tracking (inline editing)
+4. **Time Blocks** - 3 preset time blocks with Pomodoro-style timers (editable titles)
+5. **Finance** - Live BTC price (EUR), manual refresh only
 
 ## Architecture
 

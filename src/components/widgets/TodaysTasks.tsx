@@ -1,13 +1,23 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { WidgetContainer } from '../WidgetContainer';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
 import type { Task } from '../../types';
 
-const TASKS_KEY = 'daily-dashboard-tasks';
+interface TodaysTasksProps {
+  tasks: Task[];
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+}
 
-export function TodaysTasks() {
-  const [tasks, setTasks] = useLocalStorage<Task[]>(TASKS_KEY, []);
+export function TodaysTasks({ tasks, setTasks }: TodaysTasksProps) {
   const [input, setInput] = useState('');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editingId && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [editingId]);
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +41,36 @@ export function TodaysTasks() {
 
   const deleteTask = (id: string) => {
     setTasks((prev: Task[]) => prev.filter((t: Task) => t.id !== id));
+  };
+
+  const startEditing = (task: Task) => {
+    setEditingId(task.id);
+    setEditText(task.text);
+  };
+
+  const saveEdit = () => {
+    if (editingId && editText.trim()) {
+      setTasks((prev: Task[]) => 
+        prev.map((t: Task) => 
+          t.id === editingId ? { ...t, text: editText.trim() } : t
+        )
+      );
+    }
+    setEditingId(null);
+    setEditText('');
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditText('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      saveEdit();
+    } else if (e.key === 'Escape') {
+      cancelEdit();
+    }
   };
 
   const completedCount = tasks.filter((t: Task) => t.completed).length;
@@ -57,13 +97,13 @@ export function TodaysTasks() {
           {tasks.map((task: Task) => (
             <li
               key={task.id}
-              className={`flex items-center gap-3 p-2 bg-[var(--color-bg-tertiary)] rounded-lg group transition-opacity ${
+              className={`flex items-center gap-2 p-2 bg-[var(--color-bg-tertiary)] rounded-lg ${
                 task.completed ? 'opacity-50' : ''
               }`}
             >
               <button
                 onClick={() => toggleTask(task.id)}
-                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
                   task.completed
                     ? 'bg-emerald-500 border-emerald-500 text-white'
                     : 'border-[var(--color-text-secondary)] hover:border-[var(--color-accent)]'
@@ -71,18 +111,32 @@ export function TodaysTasks() {
               >
                 {task.completed && '✓'}
               </button>
-              <span
-                className={`flex-1 text-sm truncate transition-all ${
-                  task.completed
-                    ? 'line-through text-[var(--color-text-secondary)]'
-                    : 'text-[var(--color-text-primary)]'
-                }`}
-              >
-                {task.text}
-              </span>
+              {editingId === task.id ? (
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  onBlur={saveEdit}
+                  onKeyDown={handleKeyDown}
+                  className="flex-1 px-2 py-1 bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] rounded text-sm outline-none"
+                />
+              ) : (
+                <span 
+                  onClick={() => startEditing(task)}
+                  className={`flex-1 text-sm truncate cursor-pointer hover:text-[var(--color-accent)] ${
+                    task.completed
+                      ? 'line-through text-[var(--color-text-secondary)]'
+                      : 'text-[var(--color-text-primary)]'
+                  }`}
+                >
+                  {task.text}
+                </span>
+              )}
               <button
                 onClick={() => deleteTask(task.id)}
-                className="opacity-0 group-hover:opacity-100 text-xs px-2 py-1 bg-red-500/20 text-red-500 rounded hover:bg-red-500/30 transition-all"
+                className="text-[var(--color-text-secondary)] hover:text-red-500 text-xs flex-shrink-0"
+                title="Delete"
               >
                 ×
               </button>

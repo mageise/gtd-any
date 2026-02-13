@@ -53,7 +53,95 @@ Skip the full presentation/feedback loop for obvious fixes.
 
 ---
 
-## 2. Build, Lint, and Test Commands
+## 2. Product Vision & Principles
+
+### Core Purpose
+Quick daily info, task handling and time management with minimal friction "get stuff done" interface.
+
+### Simplicity Definition
+- Neat, simple handling, actionable
+- (Almost) no thinking involved
+- Truth - throw away if irrelevant
+- No deferring - less is more
+- Out of head - clear mind
+- No overthinking
+
+### Productivity Definition
+- Users get stuff done quickly with minimal effort
+- Defaults over configuration
+- No setup required
+- Focus on three resources: time, energy, money
+
+### Principles
+1. Keep it simple - Avoid unnecessary complexity, don't over-engineer
+2. Defaults over configuration
+3. Actionable over informational (unless info is valuable daily)
+4. Delete over defer
+5. Complexity in code, simplicity in UX
+6. Evaluate future widgets: Does it serve time/energy/money? Is it actionable daily?
+
+---
+
+## 3. Widget Guidelines
+
+### Sizes
+
+| Size | Width | Height | Use Case |
+|------|-------|--------|----------|
+| `quarter` | 25% | std | Very compact info (single number, status) |
+| `half` | 50% | std | Compact info, pairs well |
+| `full` | 100% | std | Standard widgets |
+| `tall` | 100% | auto | Lists, expandable content |
+
+### Categories
+
+| Category | Purpose | Examples |
+|----------|---------|----------|
+| **Info** | Passive info display, no interaction | DailyQuote, Finance |
+| **Task** | Active task handling (capture, complete, manage) | InboxZero, TodaysTasks |
+| **Timer** | Time-based | (TimeBlocks - currently disabled) |
+
+### Structure
+
+Every widget has:
+1. **Title** - Always visible (h2, uppercase, secondary color)
+2. **Content** - Main widget purpose
+3. **Footer** - Optional (metadata, quick actions)
+
+### Layout
+
+- Use `WidgetPair` component for side-by-side half/quarter widgets
+- Decide size per widget based on content, not just category
+- Half widgets can be paired or stand alone (no strict rules)
+
+### New Widget Evaluation
+
+Before creating a new widget, answer:
+
+1. **Purpose check:**
+   - Does it serve time, energy, or money?
+   - Is it actionable daily?
+   - Does it fit: "neat, simple handling, actionable, no thinking involved"?
+
+2. **Size decision:**
+   - quarter: single metric?
+   - half: compact info, pairs with another half?
+   - full/tall: content-heavy?
+
+3. **Value check:**
+   - Does it add value or clutter?
+   - Can defaults work, or need config?
+   - "Delete over defer" - do we really need this?
+
+4. **Template check:**
+   - Uses WidgetContainer
+   - Has clear title
+   - Minimal interactions
+   - Graceful fallbacks
+
+---
+
+## 4. Build, Lint, and Test Commands
 
 ### Available Commands
 
@@ -80,7 +168,7 @@ npm run lint
 
 ---
 
-## 3. Code Style Guidelines
+## 5. Code Style Guidelines
 
 ### General Principles
 
@@ -207,7 +295,7 @@ src/
 
 ---
 
-## 4. Project-Specific Guidelines
+## 6. Project-Specific Guidelines
 
 ### Widget Development
 
@@ -237,7 +325,7 @@ When adding new widgets:
 
 ---
 
-## 5. Common Tasks Reference
+## 7. Common Tasks Reference
 
 ### Adding a New Widget
 
@@ -262,7 +350,7 @@ When adding new widgets:
 
 ---
 
-## 6. Testing Guidelines
+## 8. Testing Guidelines
 
 When tests are added:
 - Use **Vitest** or **Jest** (check fin-track for pattern)

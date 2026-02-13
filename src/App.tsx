@@ -2,7 +2,6 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import { Layout } from './components/Layout';
 import { WidgetPair } from './components/WidgetPair';
 import { DailyQuote } from './components/widgets/DailyQuote';
-import { TimeBlocks } from './components/widgets/TimeBlocks';
 import { InboxZero } from './components/widgets/InboxZero';
 import { TodaysTasks } from './components/widgets/TodaysTasks';
 import { Finance } from './components/widgets/Finance';
@@ -21,7 +20,6 @@ function App() {
       </WidgetPair>
       <InboxZero setTasks={setTasks} />
       <TodaysTasks tasks={tasks} setTasks={setTasks} />
-      <TimeBlocks />
     </Layout>
   );
 }

@@ -71,7 +71,7 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Add more widgets (Daily Focus/Intention, Habit Tracker, Weather, Calendar, Notes)
 - [ ] Make widgets reorderable (drag-and-drop)
 - [ ] Allow enabling/disabling widgets
-- [ ] Widget settings/config
+- [ ] Widget settings/config (e.g. global title/footer toggle, widget spec compliance)
 
 ### Daily Quote
 - [ ] Find other API (api.quotable.io often unavailable)

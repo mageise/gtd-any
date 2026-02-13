@@ -16,7 +16,11 @@ const FALLBACK_QUOTES: Quote[] = [
 const QUOTE_KEY = 'daily-dashboard-quote';
 const QUOTE_DATE_KEY = 'daily-dashboard-quote-date';
 
-export function DailyQuote() {
+interface DailyQuoteProps {
+  size?: 'full' | 'half';
+}
+
+export function DailyQuote({ size = 'full' }: DailyQuoteProps) {
   const [quote, setQuote] = useLocalStorage<Quote | null>(QUOTE_KEY, null);
   const [quoteDate, setQuoteDate] = useLocalStorage<string>(QUOTE_DATE_KEY, '');
   const [loading, setLoading] = useState(false);
@@ -57,7 +61,7 @@ export function DailyQuote() {
   };
 
   return (
-    <WidgetContainer title="Daily Quote" className="!py-2 !px-4">
+    <WidgetContainer title="Daily Quote" className="!px-4" size={size}>
       <div className="flex items-center justify-center min-h-[60px]">
         {loading ? (
           <span className="text-sm text-[var(--color-text-secondary)]">Loading...</span>

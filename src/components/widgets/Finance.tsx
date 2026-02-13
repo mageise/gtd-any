@@ -19,14 +19,11 @@ function formatPrice(price: number): string {
   }).format(price);
 }
 
-function formatTime(timestamp: number): string {
-  return new Date(timestamp).toLocaleTimeString([], { 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  });
+interface FinanceProps {
+  size?: 'full' | 'half';
 }
 
-export function Finance() {
+export function Finance({ size = 'full' }: FinanceProps) {
   const [finance, setFinance] = useLocalStorage<FinanceData>(FINANCE_KEY, DEFAULT_FINANCE);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -55,37 +52,27 @@ export function Finance() {
   };
 
   return (
-    <WidgetContainer title="Finance">
+    <WidgetContainer title="Finance" size={size}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-xl text-white font-bold">
+        <button
+          onClick={fetchPrice}
+          disabled={loading}
+          className="p-0 bg-transparent text-left inline-flex items-center gap-3 disabled:opacity-70"
+        >
+          <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-xl text-white font-bold select-none cursor-pointer">
             ₿
           </div>
           <div>
             <p className="text-xs text-[var(--color-text-secondary)]">Bitcoin</p>
             <p className="text-xl font-semibold text-[var(--color-text-primary)]">
-              {finance.btcPrice > 0 ? formatPrice(finance.btcPrice) : '—'}
+              {loading ? '...' : finance.btcPrice > 0 ? formatPrice(finance.btcPrice) : '—'}
             </p>
           </div>
-        </div>
-        <div className="flex flex-col items-end gap-2">
-          <button
-            onClick={fetchPrice}
-            disabled={loading}
-            className="text-xs px-3 py-1.5 bg-[var(--color-bg-tertiary)] text-[var(--color-text-secondary)] rounded-lg hover:text-[var(--color-text-primary)] transition-colors disabled:opacity-50"
-          >
-            {loading ? 'Updating...' : 'Refresh'}
-          </button>
-          {finance.lastUpdated && (
-            <span className="text-xs text-[var(--color-text-secondary)]">
-              Updated {formatTime(finance.lastUpdated)}
-            </span>
-          )}
-        </div>
+        </button>
       </div>
       {error && (
         <p className="text-xs text-red-500 mt-2">
-          Could not fetch price. Will retry on next refresh.
+          Could not fetch price. Tap BTC to retry.
         </p>
       )}
     </WidgetContainer>

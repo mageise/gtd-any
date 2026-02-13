@@ -1,5 +1,6 @@
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { Layout } from './components/Layout';
+import { WidgetPair } from './components/WidgetPair';
 import { DailyQuote } from './components/widgets/DailyQuote';
 import { TimeBlocks } from './components/widgets/TimeBlocks';
 import { InboxZero } from './components/widgets/InboxZero';
@@ -14,11 +15,13 @@ function App() {
 
   return (
     <Layout>
-      <DailyQuote />
+      <WidgetPair>
+        <DailyQuote size="half" />
+        <Finance size="half" />
+      </WidgetPair>
       <InboxZero setTasks={setTasks} />
       <TodaysTasks tasks={tasks} setTasks={setTasks} />
       <TimeBlocks />
-      <Finance />
     </Layout>
   );
 }

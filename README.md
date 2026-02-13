@@ -89,9 +89,15 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Break timer between blocks
 
 ### Finance
+- [x] Simplify widget: Remove "Refresh" button -> use BTC avatar instead, remove "Updated ..." text
 - [ ] Multiple cryptocurrencies
 - [ ] Price alerts
 - [ ] Portfolio tracking (manual entry)
+
+### Messages
+- [ ] Create simple widget to display messages to the user
+- [ ] Integrated within the Daily Dashboard app (can listen to other widgets)
+- [ ] Examples: "BTC price updated at ...", "API ... is down", "Price alert for ..."
 
 ### Data
 - [ ] Export/Import data (JSON)

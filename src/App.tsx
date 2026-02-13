@@ -18,8 +18,8 @@ function App() {
         <DailyQuote size="half" />
         <Finance size="half" />
       </WidgetPair>
-      <InboxZero setTasks={setTasks} />
-      <TodaysTasks tasks={tasks} setTasks={setTasks} />
+      <InboxZero setTasks={setTasks} size="full" />
+      <TodaysTasks tasks={tasks} setTasks={setTasks} size="full" />
     </Layout>
   );
 }

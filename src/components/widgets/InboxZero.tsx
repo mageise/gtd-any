@@ -6,9 +6,10 @@ const INBOX_KEY = 'daily-dashboard-inbox';
 
 interface InboxZeroProps {
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  size?: 'quarter' | 'half' | 'full' | 'tall';
 }
 
-export function InboxZero({ setTasks }: InboxZeroProps) {
+export function InboxZero({ setTasks, size = 'full' }: InboxZeroProps) {
   const [inbox, setInbox] = useState<InboxItem[]>(() => {
     const stored = localStorage.getItem(INBOX_KEY);
     return stored ? JSON.parse(stored) : [];
@@ -86,7 +87,7 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
   };
 
   return (
-    <WidgetContainer title="Inbox Zero">
+    <WidgetContainer title="Inbox Zero" size={size}>
       <form onSubmit={handleAdd} className="mb-3">
         <input
           type="text"

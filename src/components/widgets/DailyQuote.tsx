@@ -17,7 +17,7 @@ const QUOTE_KEY = 'daily-dashboard-quote';
 const QUOTE_DATE_KEY = 'daily-dashboard-quote-date';
 
 interface DailyQuoteProps {
-  size?: 'full' | 'half';
+  size?: 'quarter' | 'half' | 'full' | 'tall';
 }
 
 export function DailyQuote({ size = 'full' }: DailyQuoteProps) {
@@ -61,13 +61,13 @@ export function DailyQuote({ size = 'full' }: DailyQuoteProps) {
   };
 
   return (
-    <WidgetContainer title="Daily Quote" className="!px-4" size={size}>
+    <WidgetContainer title="Daily Quote" size={size} footer={quote?.author}>
       <div className="flex items-center justify-center min-h-[60px]">
         {loading ? (
           <span className="text-sm text-[var(--color-text-secondary)]">Loading...</span>
         ) : quote ? (
           <p className="text-sm text-center text-[var(--color-text-primary)] italic">
-            "{quote.text}" <span className="not-italic text-[var(--color-text-secondary)]">— {quote.author}</span>
+            "{quote.text}"
           </p>
         ) : (
           <button

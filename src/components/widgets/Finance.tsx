@@ -19,8 +19,15 @@ function formatPrice(price: number): string {
   }).format(price);
 }
 
+function formatTime(timestamp: number): string {
+  return new Date(timestamp).toLocaleTimeString([], { 
+    hour: '2-digit', 
+    minute: '2-digit' 
+  });
+}
+
 interface FinanceProps {
-  size?: 'full' | 'half';
+  size?: 'quarter' | 'half' | 'full' | 'tall';
 }
 
 export function Finance({ size = 'full' }: FinanceProps) {
@@ -52,7 +59,7 @@ export function Finance({ size = 'full' }: FinanceProps) {
   };
 
   return (
-    <WidgetContainer title="Finance" size={size}>
+    <WidgetContainer title="Finance" size={size} footer={finance.lastUpdated ? `Updated ${formatTime(finance.lastUpdated)}` : undefined}>
       <div className="flex items-center justify-between">
         <button
           onClick={fetchPrice}

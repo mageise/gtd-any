@@ -32,7 +32,14 @@ export function DailyQuote() {
   const fetchQuote = async () => {
     setLoading(true);
     try {
-      const response = await fetch('https://api.quotable.io/random?tags=inspirational|success');
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+      const response = await fetch('https://api.quotable.io/random?tags=inspirational|success', {
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
       if (response.ok) {
         const data = await response.json();
         setQuote({ text: data.content, author: data.author });

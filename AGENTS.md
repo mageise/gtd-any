@@ -4,7 +4,56 @@ This document provides guidelines for agentic coding agents operating in this re
 
 ---
 
-## 1. Build, Lint, and Test Commands
+## 1. Development Workflow Protocol
+
+Rule: Never commit/push without permission
+
+### Standard Workflow
+
+1. **Plan** - Present feature plan with:
+   - Brief description (1-2 sentences)
+   - Todo list of specific changes
+   - Files affected
+
+   Iterate with user if needed (1-2 rounds, or more if necessary)
+
+2. **Implement** - Write code following the plan
+
+3. **Verify** - Run pre-commit checks:
+   ```bash
+   npm run build
+   npm run lint
+   ```
+
+4. **Present** - Show completed work to user
+
+5. **Address Feedback** - Fix any issues if found
+
+6. **Request Commit** - Ask "Should I commit?" with draft message (50/72 rule):
+   - First line: max 50 chars, summary of what/why
+   - Blank line
+   - Body: max 72 chars per line, detailed explanation
+
+   Example:
+   ```
+   add fetch timeout to DailyQuote widget
+
+   prevents UI from hanging when quotable.io is unavailable.
+   falls back to local quotes after 5 second timeout.
+   ```
+
+7. **Request Deploy** - After commit, ask "Should I push to deploy?"
+
+### Speed-Path for Small Fixes
+
+For trivial fixes (typos, minor bug fixes):
+- Plan → Implement → Verify → Commit → Deploy
+
+Skip the full presentation/feedback loop for obvious fixes.
+
+---
+
+## 2. Build, Lint, and Test Commands
 
 ### Available Commands
 
@@ -31,7 +80,7 @@ npm run lint
 
 ---
 
-## 2. Code Style Guidelines
+## 3. Code Style Guidelines
 
 ### General Principles
 
@@ -158,7 +207,7 @@ src/
 
 ---
 
-## 3. Project-Specific Guidelines
+## 4. Project-Specific Guidelines
 
 ### Widget Development
 
@@ -188,7 +237,7 @@ When adding new widgets:
 
 ---
 
-## 4. Common Tasks Reference
+## 5. Common Tasks Reference
 
 ### Adding a New Widget
 
@@ -213,7 +262,7 @@ When adding new widgets:
 
 ---
 
-## 5. Testing Guidelines
+## 6. Testing Guidelines
 
 When tests are added:
 - Use **Vitest** or **Jest** (check fin-track for pattern)

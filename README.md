@@ -1,14 +1,22 @@
 # Daily Dashboard
 
-A beautiful, mobile-first personal dashboard with 5 productivity widgets. Built with React, TypeScript, Vite, and Tailwind CSS.
+A beautiful, mobile-first personal dashboard with productivity widgets. Built with React, TypeScript, Vite, and Tailwind CSS.
 
-## Widgets (in order)
+## Widgets
 
 1. **Daily Quote** - Inspirational quote that refreshes each day (API: quotable.io, fallback to local array)
 2. **Inbox Zero** - Quick capture → graduate to tasks or delete (inline editing)
 3. **Today's Tasks** - Checklist with completion tracking (inline editing)
 4. **Time Blocks** - 3 preset time blocks with Pomodoro-style timers (editable titles)
 5. **Finance** - Live BTC price (EUR), manual refresh only
+
+## Tech Stack
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS v4
+- PWA (vite-plugin-pwa)
+- localStorage (no backend)
 
 ## Architecture
 
@@ -47,24 +55,38 @@ src/
 - `Task` - id, text, completed, createdAt
 - `FinanceData` - btcPrice, lastUpdated
 
+## Issues
+
+### CORS Issues with Public APIs
+When deploying to GitHub Pages (or any domain), some public APIs may block requests due to CORS policies. For example, `api.quotable.io` may block requests from GitHub Pages domains. The app includes:
+- **Timeouts** - Requests that hang for >5s will fall back to cached/local data
+- **Fallback quotes** - Daily Quote widget has a local array of fallback quotes
+- **Manual refresh** - Finance widget requires manual refresh (no auto-refresh)
+
+If an API becomes unavailable or blocked, the widget will display cached data or fall back gracefully.
+
 ## Future Ideas
 
 ### Widgets
-- [ ] Add more widgets (Habit Tracker, Weather, Calendar, Notes)
+- [ ] Add more widgets (Daily Focus/Intention, Habit Tracker, Weather, Calendar, Notes)
 - [ ] Make widgets reorderable (drag-and-drop)
 - [ ] Allow enabling/disabling widgets
 - [ ] Widget settings/config
+
+### Daily Quote
+- [ ] Find other API (api.quotable.io often unavailable)
+- [ ] Refresh on clicking on the quote itself (works as button)
+
+### Inbox & Tasks
+- [ ] Task categories/tags
+- [ ] Priority levels
+- [ ] Due dates
+- [ ] Recurring tasks
 
 ### Time Blocks
 - [ ] Link Time Blocks to Tasks (auto-suggest related tasks when block starts)
 - [ ] Add custom time blocks (not just presets)
 - [ ] Break timer between blocks
-
-### Tasks & Inbox
-- [ ] Task categories/tags
-- [ ] Priority levels
-- [ ] Due dates
-- [ ] Recurring tasks
 
 ### Finance
 - [ ] Multiple cryptocurrencies
@@ -80,14 +102,6 @@ src/
 - [ ] Dark/Light mode toggle (currently system-only)
 - [ ] Widget animations
 - [ ] Keyboard shortcuts
-
-## Tech Stack
-- React 18
-- TypeScript
-- Vite
-- Tailwind CSS v4
-- PWA (vite-plugin-pwa)
-- localStorage (no backend)
 
 ## PWA Installation
 

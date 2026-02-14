@@ -36,6 +36,11 @@ export interface FinanceData {
   lastUpdated: number | null;
 }
 
+export interface StockData {
+  stockPrice: number;
+  lastUpdated: number | null;
+}
+
 export interface AppState {
   timeBlocks: TimeBlock[];
   inbox: InboxItem[];

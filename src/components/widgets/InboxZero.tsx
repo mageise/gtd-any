@@ -85,8 +85,33 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
     }
   };
 
+  const clearAll = () => {
+    saveInbox([]);
+  };
+
+  const totalCount = inbox.length;
+
   return (
-    <WidgetContainer title="Inbox Zero">
+    <WidgetContainer 
+      title="Inbox Zero"
+      footer={
+        <div className="flex justify-between items-center w-full">
+          {inbox.length === 0 ? (
+            <span className="text-xs text-[var(--color-text-secondary)]">Inbox zero!</span>
+          ) : (
+            <>
+              <span className="text-xs text-[var(--color-text-secondary)]">{totalCount} thought{totalCount !== 1 ? 's' : ''} captured</span>
+              <button
+                onClick={clearAll}
+                className="text-xs text-[var(--color-text-secondary)] hover:text-red-500 transition-colors"
+              >
+                Clear all
+              </button>
+            </>
+          )}
+        </div>
+      }
+    >
       <form onSubmit={handleAdd} className="mb-3">
         <input
           type="text"
@@ -97,12 +122,8 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
         />
       </form>
       
-      {inbox.length === 0 ? (
-        <p className="text-sm text-[var(--color-text-secondary)] text-center py-4">
-          Inbox zero! 🎯
-        </p>
-      ) : (
-        <ul className="space-y-2 max-h-[200px] overflow-y-auto">
+      {inbox.length > 0 && (
+        <ul className="space-y-2 max-h-[250px] overflow-y-auto">
           {inbox.map((item: InboxItem) => (
             <li
               key={item.id}
@@ -131,7 +152,7 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
                 className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] text-xs"
                 title="Move to tasks"
               >
-                →
+                ✓
               </button>
               <button
                 onClick={() => handleDelete(item.id)}

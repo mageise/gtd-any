@@ -8,22 +8,33 @@ interface ShoppingListProps {
   setItems: React.Dispatch<React.SetStateAction<ShoppingItem[]>>;
 }
 
-const QUICK_ADD_ITEMS = [
-  'milk', 'eggs', 'bread', 'butter', 'cheese', 'cream cheese',
-  'chicken', 'beef', 'pork', 'salami',
-  'rice', 'pasta', 'noodles',
-  'tomatoes', 'onions', 'carrots', 'cucumber', 'peppers', 'lettuce',
-  'apples', 'bananas', 'grapes', 'oranges', 'berries',
-  'yoghurt', 'ice cream',
-  'coffee', 'tea', 'juice', 'water', 'soda',
-  'Nutella', 'ketchup', 'dressing', 'egg salad',
-  'pizza', 'desserts',
-];
+type CategoryKey = 'dairy' | 'meat' | 'carbs' | 'produce' | 'fruit' | 'drinks' | 'other' | 'ready';
+
+interface QuickAddCategory {
+  label: string;
+  color: string;
+  items: string[];
+}
+
+const QUICK_ADD_CATEGORIES: Record<CategoryKey, QuickAddCategory> = {
+  dairy: { label: 'Dairy', color: 'bg-blue-500', items: ['Milk', 'Eggs', 'Butter', 'Cheese', 'Cream cheese', 'Yoghurt', 'Ice cream'] },
+  meat: { label: 'Meat', color: 'bg-red-500', items: ['Chicken', 'Beef', 'Pork', 'Salami'] },
+  carbs: { label: 'Carbs', color: 'bg-amber-500', items: ['Rice', 'Pasta', 'Noodles', 'Bread'] },
+  produce: { label: 'Produce', color: 'bg-green-500', items: ['Tomatoes', 'Onions', 'Carrots', 'Cucumber', 'Peppers', 'Lettuce'] },
+  fruit: { label: 'Fruit', color: 'bg-purple-500', items: ['Apples', 'Bananas', 'Grapes', 'Oranges', 'Berries'] },
+  drinks: { label: 'Drinks', color: 'bg-cyan-500', items: ['Coffee', 'Tea', 'Juice', 'Water', 'Soda'] },
+  other: { label: 'Other', color: 'bg-orange-500', items: ['Nutella', 'Ketchup', 'Dressing', 'Egg salad'] },
+  ready: { label: 'Ready', color: 'bg-pink-500', items: ['Pizza', 'Desserts'] },
+};
+
+const CATEGORY_ORDER: CategoryKey[] = ['dairy', 'meat', 'carbs', 'produce', 'fruit', 'drinks', 'other', 'ready'];
 
 export function ShoppingList({ items, setItems }: ShoppingListProps) {
   const [input, setInput] = useState('');
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+  const [pendingToggle, setPendingToggle] = useState<string | null>(null);
   const editInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -36,6 +47,24 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
     if (a.completed !== b.completed) return a.completed ? 1 : -1;
     return b.createdAt - a.createdAt;
   });
+
+  const displayItems = pendingToggle
+    ? sortedItems.map(item => 
+        item.id === pendingToggle 
+          ? { ...item, completed: !item.completed } 
+          : item
+      )
+    : sortedItems;
+
+  const handleToggleComplete = (id: string) => {
+    setPendingToggle(id);
+    setTimeout(() => {
+      setItems((prev: ShoppingItem[]) =>
+        prev.map((i: ShoppingItem) => (i.id === id ? { ...i, completed: !i.completed } : i))
+      );
+      setPendingToggle(null);
+    }, 250);
+  };
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,21 +80,43 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
     setInput('');
   };
 
-  const handleQuickAdd = (item: string) => {
+  const handleQuickAdd = (itemName: string) => {
     const now = Date.now();
-    const newItem: ShoppingItem = {
-      id: now.toString(),
-      text: item,
-      completed: false,
-      createdAt: now,
-    };
-    setItems((prev: ShoppingItem[]) => [newItem, ...prev]);
+    const nameLower = itemName.toLowerCase();
+    
+    setItems((prev: ShoppingItem[]) => {
+      const existingItem = prev.find((i: ShoppingItem) => {
+        const textLower = i.text.toLowerCase();
+        return textLower === nameLower || textLower.endsWith(' ' + nameLower);
+      });
+      
+      if (existingItem) {
+        const match = existingItem.text.match(/^(\d+)x (.+)$/);
+        if (match) {
+          const quantity = parseInt(match[1], 10);
+          const name = match[2];
+          return prev.map((i: ShoppingItem) => 
+            i.id === existingItem.id ? { ...i, text: `${quantity + 1}x ${name}` } : i
+          );
+        } else {
+          return prev.map((i: ShoppingItem) => 
+            i.id === existingItem.id ? { ...i, text: `2x ${itemName}` } : i
+          );
+        }
+      }
+      
+      const newItem: ShoppingItem = {
+        id: now.toString(),
+        text: itemName,
+        completed: false,
+        createdAt: now,
+      };
+      return [newItem, ...prev];
+    });
   };
 
   const toggleItem = (id: string) => {
-    setItems((prev: ShoppingItem[]) =>
-      prev.map((i: ShoppingItem) => (i.id === id ? { ...i, completed: !i.completed } : i))
-    );
+    handleToggleComplete(id);
   };
 
   const deleteItem = (id: string) => {
@@ -110,39 +161,69 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
   const totalCount = items.length;
 
   return (
-    <WidgetContainer title={`Shopping List (${completedCount}/${totalCount})`}>
-      <div className="mb-3">
-        <p className="text-xs text-[var(--color-text-secondary)] mb-2">Quick add:</p>
-        <div className="flex flex-wrap gap-1.5">
-          {QUICK_ADD_ITEMS.map((item) => (
-            <button
-              key={item}
-              onClick={() => handleQuickAdd(item)}
-              className="px-2 py-1 text-xs bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] rounded hover:bg-[var(--color-accent)] hover:text-white transition-colors capitalize"
-            >
-              {item}
-            </button>
-          ))}
+    <WidgetContainer 
+      title="Shopping List"
+      footer={
+        <div className="flex justify-between items-center w-full">
+          {items.length === 0 ? (
+            <span className="text-xs text-[var(--color-text-secondary)]">No items. Add one above or use quick add!</span>
+          ) : (
+            <>
+              <span className="text-xs text-[var(--color-text-secondary)]">{completedCount}/{totalCount} item{totalCount !== 1 ? 's' : ''} bought</span>
+              <button
+                onClick={clearAll}
+                className="text-xs text-[var(--color-text-secondary)] hover:text-red-500 transition-colors"
+              >
+                Clear all
+              </button>
+            </>
+          )}
         </div>
-      </div>
-
-      <form onSubmit={handleAdd} className="mb-3">
+      }
+    >
+      <form onSubmit={handleAdd} className="mb-3 relative">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Add item..."
-          className="w-full px-3 py-2 bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] rounded-lg text-sm outline-none focus:ring-2 focus:ring-[var(--color-accent)] placeholder:text-[var(--color-text-secondary)]"
+          className="w-full px-3 py-2 pr-8 bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] rounded-lg text-sm outline-none focus:ring-2 focus:ring-[var(--color-accent)] placeholder:text-[var(--color-text-secondary)]"
         />
+        <button
+          type="button"
+          onClick={() => setShowQuickAdd(!showQuickAdd)}
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] text-sm px-1"
+        >
+          {showQuickAdd ? '▲' : '▼'}
+        </button>
       </form>
+
+      {showQuickAdd && (
+        <div className="mb-3">
+          {CATEGORY_ORDER.map((categoryKey) => {
+            const category = QUICK_ADD_CATEGORIES[categoryKey];
+            return (
+              <div key={categoryKey} className="mb-2 last:mb-0">
+                <div className="flex flex-wrap gap-1.5">
+                  {category.items.map((item) => (
+                    <button
+                      key={item}
+                      onClick={() => handleQuickAdd(item)}
+                      className={`px-2 py-1 text-xs text-white rounded capitalize transition-colors ${category.color} hover:opacity-80`}
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
       
-      {items.length === 0 ? (
-        <p className="text-sm text-[var(--color-text-secondary)] text-center py-4">
-          No items. Quick add above or type to add!
-        </p>
-      ) : (
-        <ul className="space-y-2 max-h-[200px] overflow-y-auto">
-          {sortedItems.map((item: ShoppingItem) => (
+      {items.length > 0 && (
+        <ul className="space-y-2 max-h-[250px] overflow-y-auto">
+          {displayItems.map((item: ShoppingItem) => (
             <li
               key={item.id}
               className={`flex items-center gap-2 p-2 bg-[var(--color-bg-tertiary)] rounded-lg ${
@@ -172,7 +253,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
               ) : (
                 <span 
                   onClick={() => startEditing(item)}
-                  className={`flex-1 text-sm truncate cursor-pointer hover:text-[var(--color-accent)] ${
+                  className={`flex-1 text-sm truncate capitalize cursor-pointer hover:text-[var(--color-accent)] ${
                     item.completed
                       ? 'line-through text-[var(--color-text-secondary)]'
                       : 'text-[var(--color-text-primary)]'
@@ -192,16 +273,6 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
           ))}
         </ul>
       )}
-      <footer>
-        {items.length > 0 && (
-          <button
-            onClick={clearAll}
-            className="text-xs text-[var(--color-text-secondary)] hover:text-red-500 transition-colors"
-          >
-            Clear all
-          </button>
-        )}
-      </footer>
     </WidgetContainer>
   );
 }

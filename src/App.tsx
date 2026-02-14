@@ -1,8 +1,9 @@
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { Layout } from './components/Layout';
 import { WidgetPair } from './components/WidgetPair';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { InboxZero } from './components/widgets/InboxZero';
-import { TodaysTasks } from './components/widgets/TodaysTasks';
+import { TasksToday } from './components/widgets/TasksToday';
 import { ShoppingList } from './components/widgets/ShoppingList';
 import { BTCPrice } from './components/widgets/BTCPrice';
 import type { Task, ShoppingItem } from './types';
@@ -17,11 +18,19 @@ function App() {
   return (
     <Layout>
       <WidgetPair>
-        <BTCPrice />
+        <ErrorBoundary>
+          <BTCPrice />
+        </ErrorBoundary>
       </WidgetPair>
-      <InboxZero setTasks={setTasks} />
-      <TodaysTasks tasks={tasks} setTasks={setTasks} />
-      <ShoppingList items={shopping} setItems={setShopping} />
+      <ErrorBoundary>
+        <InboxZero setTasks={setTasks} />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <TasksToday tasks={tasks} setTasks={setTasks} />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <ShoppingList items={shopping} setItems={setShopping} />
+      </ErrorBoundary>
     </Layout>
   );
 }

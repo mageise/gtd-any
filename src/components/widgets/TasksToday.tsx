@@ -2,12 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import { WidgetContainer } from '../WidgetContainer';
 import type { Task } from '../../types';
 
-interface TodaysTasksProps {
+interface TasksTodayProps {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
-export function TodaysTasks({ tasks, setTasks }: TodaysTasksProps) {
+export function TasksToday({ tasks, setTasks }: TasksTodayProps) {
   const [input, setInput] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
@@ -76,23 +76,42 @@ export function TodaysTasks({ tasks, setTasks }: TodaysTasksProps) {
   const completedCount = tasks.filter((t: Task) => t.completed).length;
   const totalCount = tasks.length;
 
+  const clearAll = () => {
+    setTasks([]);
+  };
+
   return (
-    <WidgetContainer title={`Today's Tasks (${completedCount}/${totalCount})`}>
+    <WidgetContainer 
+      title="Tasks Today"
+      footer={
+        <div className="flex justify-between items-center w-full">
+          {tasks.length === 0 ? (
+            <span className="text-xs text-[var(--color-text-secondary)]">No tasks yet. Add one above or graduate from inbox!</span>
+          ) : (
+            <>
+              <span className="text-xs text-[var(--color-text-secondary)]">{completedCount}/{totalCount} task{totalCount !== 1 ? 's' : ''} done</span>
+              <button
+                onClick={clearAll}
+                className="text-xs text-[var(--color-text-secondary)] hover:text-red-500 transition-colors"
+              >
+                Clear all
+              </button>
+            </>
+          )}
+        </div>
+      }
+    >
       <form onSubmit={handleAdd} className="mb-3">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Add a task..."
+          placeholder="Add task..."
           className="w-full px-3 py-2 bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] rounded-lg text-sm outline-none focus:ring-2 focus:ring-[var(--color-accent)] placeholder:text-[var(--color-text-secondary)]"
         />
       </form>
       
-      {tasks.length === 0 ? (
-        <p className="text-sm text-[var(--color-text-secondary)] text-center py-4">
-          No tasks yet. Add one above or graduate from inbox!
-        </p>
-      ) : (
+      {tasks.length > 0 && (
         <ul className="space-y-2 max-h-[250px] overflow-y-auto">
           {tasks.map((task: Task) => (
             <li

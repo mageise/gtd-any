@@ -26,11 +26,7 @@ function formatTime(timestamp: number): string {
   });
 }
 
-interface FinanceProps {
-  size?: 'quarter' | 'half' | 'full' | 'tall';
-}
-
-export function Finance({ size = 'full' }: FinanceProps) {
+export function Finance() {
   const [finance, setFinance] = useLocalStorage<FinanceData>(FINANCE_KEY, DEFAULT_FINANCE);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -59,7 +55,7 @@ export function Finance({ size = 'full' }: FinanceProps) {
   };
 
   return (
-    <WidgetContainer title="Finance" size={size} footer={finance.lastUpdated ? `Updated ${formatTime(finance.lastUpdated)}` : undefined}>
+    <WidgetContainer title="Finance" footer={finance.lastUpdated ? `Updated ${formatTime(finance.lastUpdated)}` : undefined}>
       <div className="flex items-center justify-between">
         <button
           onClick={fetchPrice}

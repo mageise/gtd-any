@@ -15,11 +15,11 @@ function App() {
   return (
     <Layout>
       <WidgetPair>
-        <DailyQuote size="half" />
-        <Finance size="half" />
+        <DailyQuote />
+        <Finance />
       </WidgetPair>
-      <InboxZero setTasks={setTasks} size="full" />
-      <TodaysTasks tasks={tasks} setTasks={setTasks} size="full" />
+      <InboxZero setTasks={setTasks} />
+      <TodaysTasks tasks={tasks} setTasks={setTasks} />
     </Layout>
   );
 }

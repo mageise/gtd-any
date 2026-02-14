@@ -5,10 +5,9 @@ import type { Task } from '../../types';
 interface TodaysTasksProps {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
-  size?: 'quarter' | 'half' | 'full' | 'tall';
 }
 
-export function TodaysTasks({ tasks, setTasks, size = 'full' }: TodaysTasksProps) {
+export function TodaysTasks({ tasks, setTasks }: TodaysTasksProps) {
   const [input, setInput] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
@@ -78,7 +77,7 @@ export function TodaysTasks({ tasks, setTasks, size = 'full' }: TodaysTasksProps
   const totalCount = tasks.length;
 
   return (
-    <WidgetContainer title={`Today's Tasks (${completedCount}/${totalCount})`} size={size}>
+    <WidgetContainer title={`Today's Tasks (${completedCount}/${totalCount})`}>
       <form onSubmit={handleAdd} className="mb-3">
         <input
           type="text"

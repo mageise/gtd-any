@@ -24,6 +24,13 @@ export interface Task {
   createdAt: number;
 }
 
+export interface ShoppingItem {
+  id: string;
+  text: string;
+  completed: boolean;
+  createdAt: number;
+}
+
 export interface FinanceData {
   btcPrice: number;
   lastUpdated: number | null;

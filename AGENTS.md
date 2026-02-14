@@ -152,6 +152,12 @@ Before creating a new widget, answer:
 | `npm run lint` | Run ESLint |
 | `npm run preview` | Preview production build locally |
 
+### Other Useful Commands
+
+| Command | Description |
+|---------|-------------|
+| `sips -s format png input.svg -o output.png` | Convert SVG to PNG (macOS built-in) |
+
 ### Running a Single Test
 
 This project currently has **no test suite**. If tests are added in the future:

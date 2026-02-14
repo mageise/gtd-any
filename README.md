@@ -88,11 +88,13 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Add custom time blocks (not just presets)
 - [ ] Break timer between blocks
 
-### Finance
-- [x] Simplify widget: Remove "Refresh" button -> use BTC avatar instead, remove "Updated ..." text
-- [ ] Multiple cryptocurrencies
-- [ ] Price alerts
-- [ ] Portfolio tracking (manual entry)
+### BTC Price
+- [ ] Make currency configurable (defaults to EUR)
+
+### Shopping List
+- [ ] Create simple widget to manage a simple shopping list (e.g. groceries, regular items)
+- [ ] This widget will be very similar to the Tasks widget, but dedicated to Shopping
+- [ ] Solve: simple approach to pull in a pre-configured list of items (no configuration through widget or dashboard)
 
 ### Messages
 - [ ] Create simple widget to display messages to the user

@@ -26,7 +26,7 @@ function formatTime(timestamp: number): string {
   });
 }
 
-export function Finance() {
+export function BTCPrice() {
   const [finance, setFinance] = useLocalStorage<FinanceData>(FINANCE_KEY, DEFAULT_FINANCE);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -55,7 +55,7 @@ export function Finance() {
   };
 
   return (
-    <WidgetContainer title="Finance" footer={finance.lastUpdated ? `Updated ${formatTime(finance.lastUpdated)}` : undefined}>
+    <WidgetContainer title="BTC Price" footer={finance.lastUpdated ? `Updated ${formatTime(finance.lastUpdated)}` : undefined}>
       <div className="flex items-center justify-between">
         <button
           onClick={fetchPrice}

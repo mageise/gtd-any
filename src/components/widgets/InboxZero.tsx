@@ -105,7 +105,7 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
         </div>
       }
     >
-      <form onSubmit={handleAdd} className="mb-3">
+      <form onSubmit={handleAdd} className={inbox.length > 0 ? 'mb-2' : ''}>
         <input
           type="text"
           value={input}

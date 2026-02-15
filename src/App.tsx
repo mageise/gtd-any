@@ -1,4 +1,5 @@
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { MinimalModeProvider } from './hooks/useMinimalMode';
 import { Layout } from './components/Layout';
 import { WidgetPair } from './components/WidgetPair';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -17,25 +18,27 @@ function App() {
   const [shopping, setShopping] = useLocalStorage<ShoppingItem[]>(SHOPPING_KEY, []);
 
   return (
-    <Layout>
-      <WidgetPair>
+    <MinimalModeProvider>
+      <Layout>
+        <WidgetPair>
+          <ErrorBoundary>
+            <BTCPrice />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <StockPrice />
+          </ErrorBoundary>
+        </WidgetPair>
         <ErrorBoundary>
-          <BTCPrice />
+          <InboxZero setTasks={setTasks} />
         </ErrorBoundary>
         <ErrorBoundary>
-          <StockPrice />
+          <TasksToday tasks={tasks} setTasks={setTasks} />
         </ErrorBoundary>
-      </WidgetPair>
-      <ErrorBoundary>
-        <InboxZero setTasks={setTasks} />
-      </ErrorBoundary>
-      <ErrorBoundary>
-        <TasksToday tasks={tasks} setTasks={setTasks} />
-      </ErrorBoundary>
-      <ErrorBoundary>
-        <ShoppingList items={shopping} setItems={setShopping} />
-      </ErrorBoundary>
-    </Layout>
+        <ErrorBoundary>
+          <ShoppingList items={shopping} setItems={setShopping} />
+        </ErrorBoundary>
+      </Layout>
+    </MinimalModeProvider>
   );
 }
 

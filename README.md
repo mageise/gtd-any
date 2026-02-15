@@ -7,8 +7,10 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 1. **Daily Quote** - Inspirational quote that refreshes each day (API: quotable.io, fallback to local array)
 2. **Inbox Zero** - Quick capture → graduate to tasks or delete (inline editing)
 3. **Today's Tasks** - Checklist with completion tracking (inline editing)
-4. **Time Blocks** - 3 preset time blocks with Pomodoro-style timers (editable titles)
-5. **Finance** - Live BTC price (EUR), manual refresh only
+4. **Shopping List** - Grocery list with quick-add categories and quantity prefixes (inline editing)
+5. **Time Blocks** - 3 preset time blocks with Pomodoro-style timers (editable titles)
+6. **BTC Price** - Live Bitcoin price (EUR), manual refresh, shows change vs previous day
+7. **Stock Price** - Cloudflare stock price (EUR), manual refresh, shows change vs previous day
 
 ## Tech Stack
 - React 18
@@ -18,6 +20,11 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 - PWA (vite-plugin-pwa)
 - localStorage (no backend)
 
+## Features
+
+### Minimal Mode
+Toggle minimal mode via ◉ button in the footer. Hides widget titles and footers, reduces padding and spacing for maximum screen space. State is persisted in localStorage.
+
 ## Architecture
 
 ### Data Storage
@@ -26,7 +33,9 @@ All data persisted in localStorage:
 - `daily-dashboard-timeblocks`
 - `daily-dashboard-inbox`
 - `daily-dashboard-tasks`
+- `daily-dashboard-shopping`
 - `daily-dashboard-finance`
+- `daily-dashboard-stock`
 
 ### Project Structure
 ```
@@ -36,8 +45,10 @@ src/
 │   │   ├── DailyQuote.tsx
 │   │   ├── TimeBlocks.tsx
 │   │   ├── InboxZero.tsx
-│   │   ├── TodaysTasks.tsx
-│   │   └── Finance.tsx
+│   │   ├── TasksToday.tsx
+│   │   ├── ShoppingList.tsx
+│   │   ├── BTCPrice.tsx
+│   │   └── StockPrice.tsx
 │   ├── Layout.tsx
 │   └── WidgetContainer.tsx
 ├── hooks/
@@ -53,7 +64,9 @@ src/
 - `TimeBlock` - id, title, duration (min), remaining (sec), isRunning
 - `InboxItem` - id, text, createdAt
 - `Task` - id, text, completed, createdAt
-- `FinanceData` - btcPrice, lastUpdated
+- `ShoppingItem` - id, text, completed, createdAt
+- `FinanceData` - btcPrice, previousPrice, lastUpdated
+- `StockData` - stockPrice, previousPrice, lastUpdated
 
 ## Issues
 
@@ -68,10 +81,9 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 ## Future Ideas
 
 ### Widgets
-- [ ] Add more widgets (Daily Focus/Intention, Habit Tracker, Weather, Calendar, Notes)
+- [ ] Add more widgets (Daily Focus/Intention, Habit Tracker, Calendar, Notes)
 - [ ] Make widgets reorderable (drag-and-drop)
 - [ ] Allow enabling/disabling widgets
-- [ ] Widget settings/config (e.g. global title/footer toggle with minimal mode - hides title/footer, removes margins for max compactness)
 
 ### Daily Quote
 - [ ] Find other API (api.quotable.io often unavailable)
@@ -88,13 +100,9 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Add custom time blocks (not just presets)
 - [ ] Break timer between blocks
 
-### BTC Price
+### BTC & Stock Price
 - [ ] Make currency configurable (defaults to EUR)
-
-### Shopping List
-- [ ] Create simple widget to manage a simple shopping list (e.g. groceries, regular items)
-- [ ] This widget will be very similar to the Tasks widget, but dedicated to Shopping
-- [ ] Solve: simple approach to pull in a pre-configured list of items (no configuration through widget or dashboard)
+- [ ] Add price alerts (notify when price crosses threshold)
 
 ### Messages
 - [ ] Create simple widget to display messages to the user

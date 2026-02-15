@@ -181,7 +181,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
         </div>
       }
     >
-      <form onSubmit={handleAdd} className="mb-3 relative">
+      <form onSubmit={handleAdd} className={`${items.length > 0 ? 'mb-2' : ''} relative`}>
         <input
           type="text"
           value={input}

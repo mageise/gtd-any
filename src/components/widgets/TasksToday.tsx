@@ -101,7 +101,7 @@ export function TasksToday({ tasks, setTasks }: TasksTodayProps) {
         </div>
       }
     >
-      <form onSubmit={handleAdd} className="mb-3">
+      <form onSubmit={handleAdd} className={tasks.length > 0 ? 'mb-2' : ''}>
         <input
           type="text"
           value={input}

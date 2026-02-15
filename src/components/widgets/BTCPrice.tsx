@@ -56,26 +56,24 @@ export function BTCPrice() {
 
   return (
     <WidgetContainer title="BTC Price" footer={finance.lastUpdated ? `Updated ${formatTime(finance.lastUpdated)}` : undefined}>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
         <button
           onClick={fetchPrice}
           disabled={loading}
-          className="p-0 bg-transparent text-left inline-flex items-center gap-3 disabled:opacity-70"
+          className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-lg text-white font-bold select-none cursor-pointer disabled:opacity-70"
         >
-          <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-xl text-white font-bold select-none cursor-pointer">
-            ₿
-          </div>
-          <div>
-            <p className="text-xs text-[var(--color-text-secondary)]">Bitcoin</p>
-            <p className="text-xl font-semibold text-[var(--color-text-primary)]">
-              {loading ? '...' : finance.btcPrice > 0 ? formatPrice(finance.btcPrice) : '—'}
-            </p>
-          </div>
+          ₿
         </button>
+        <div>
+          <p className="text-xs text-[var(--color-text-secondary)]">Bitcoin</p>
+          <p className="text-lg font-semibold text-[var(--color-text-primary)]">
+            {loading ? '...' : finance.btcPrice > 0 ? formatPrice(finance.btcPrice) : '—'}
+          </p>
+        </div>
       </div>
       {error && (
         <p className="text-xs text-red-500 mt-2">
-          Could not fetch price. Tap BTC to retry.
+          Could not fetch price. Tap to retry.
         </p>
       )}
     </WidgetContainer>

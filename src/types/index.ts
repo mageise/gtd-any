@@ -33,11 +33,13 @@ export interface ShoppingItem {
 
 export interface FinanceData {
   btcPrice: number;
+  previousPrice?: number;
   lastUpdated: number | null;
 }
 
 export interface StockData {
   stockPrice: number;
+  previousPrice?: number;
   lastUpdated: number | null;
 }
 

@@ -92,7 +92,7 @@ export function TasksToday({ tasks, setTasks }: TasksTodayProps) {
               <span className="text-xs text-[var(--color-text-secondary)]">{completedCount}/{totalCount} task{totalCount !== 1 ? 's' : ''} done</span>
               <button
                 onClick={clearAll}
-                className="text-xs text-[var(--color-text-secondary)] hover:text-red-500 transition-colors"
+                className="text-xs text-[var(--color-text-secondary)] hover:text-rose-500 transition-colors"
               >
                 Clear all
               </button>
@@ -154,7 +154,7 @@ export function TasksToday({ tasks, setTasks }: TasksTodayProps) {
               )}
               <button
                 onClick={() => deleteTask(task.id)}
-                className="text-[var(--color-text-secondary)] hover:text-red-500 text-xs flex-shrink-0"
+                className="text-[var(--color-text-secondary)] hover:text-rose-500 text-xs flex-shrink-0"
                 title="Delete"
               >
                 ×

@@ -20,10 +20,30 @@ function formatPrice(price: number): string {
 }
 
 function formatTime(timestamp: number): string {
-  return new Date(timestamp).toLocaleTimeString([], { 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  });
+  const date = new Date(timestamp);
+  const now = new Date();
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const isToday = date.toDateString() === now.toDateString();
+  const isYesterday = date.toDateString() === yesterday.toDateString();
+
+  const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  if (isToday) {
+    return `Today ${timeStr}`;
+  }
+  if (isYesterday) {
+    return `Yesterday ${timeStr}`;
+  }
+  return date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + timeStr;
+}
+
+function isNewDay(timestamp: number | null): boolean {
+  if (!timestamp) return true;
+  const lastDate = new Date(timestamp);
+  const today = new Date();
+  return lastDate.toDateString() !== today.toDateString();
 }
 
 export function StockPrice() {
@@ -41,8 +61,11 @@ export function StockPrice() {
       if (response.ok) {
         const data = await response.json();
         const price = data.chart.result[0].meta.regularMarketPrice;
+        const newDay = isNewDay(stock.lastUpdated);
+
         setStock({
           stockPrice: price,
+          previousPrice: newDay && stock.stockPrice > 0 ? stock.stockPrice : stock.previousPrice,
           lastUpdated: Date.now(),
         });
       } else {
@@ -55,8 +78,21 @@ export function StockPrice() {
     }
   };
 
+  const getFooter = () => {
+    if (!stock.lastUpdated) return 'Tap icon to fetch price';
+
+    const time = formatTime(stock.lastUpdated);
+    if (stock.previousPrice && stock.stockPrice > stock.previousPrice) {
+      return <span>{time} <span className="text-emerald-500">▲</span></span>;
+    }
+    if (stock.previousPrice && stock.stockPrice < stock.previousPrice) {
+      return <span>{time} <span className="text-rose-500">▼</span></span>;
+    }
+    return time;
+  };
+
   return (
-    <WidgetContainer title="Stock Price" footer={stock.lastUpdated ? `Updated ${formatTime(stock.lastUpdated)}` : undefined}>
+    <WidgetContainer title="Stock Price" footer={getFooter()}>
       <div className="flex items-center gap-3">
         <button
           onClick={fetchPrice}

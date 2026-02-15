@@ -18,7 +18,7 @@ interface QuickAddCategory {
 
 const QUICK_ADD_CATEGORIES: Record<CategoryKey, QuickAddCategory> = {
   dairy: { label: 'Dairy', color: 'bg-blue-500', items: ['Milk', 'Eggs', 'Butter', 'Cheese', 'Cream cheese', 'Yoghurt', 'Ice cream'] },
-  meat: { label: 'Meat', color: 'bg-red-500', items: ['Chicken', 'Beef', 'Pork', 'Salami'] },
+  meat: { label: 'Meat', color: 'bg-red-700', items: ['Chicken', 'Beef', 'Pork', 'Salami'] },
   carbs: { label: 'Carbs', color: 'bg-amber-500', items: ['Rice', 'Pasta', 'Noodles', 'Bread'] },
   produce: { label: 'Produce', color: 'bg-green-500', items: ['Tomatoes', 'Onions', 'Carrots', 'Cucumber', 'Peppers', 'Lettuce'] },
   fruit: { label: 'Fruit', color: 'bg-purple-500', items: ['Apples', 'Bananas', 'Grapes', 'Oranges', 'Berries'] },
@@ -172,7 +172,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
               <span className="text-xs text-[var(--color-text-secondary)]">{completedCount}/{totalCount} item{totalCount !== 1 ? 's' : ''} bought</span>
               <button
                 onClick={clearAll}
-                className="text-xs text-[var(--color-text-secondary)] hover:text-red-500 transition-colors"
+                className="text-xs text-[var(--color-text-secondary)] hover:text-rose-500 transition-colors"
               >
                 Clear all
               </button>
@@ -264,7 +264,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
               )}
               <button
                 onClick={() => deleteItem(item.id)}
-                className="text-[var(--color-text-secondary)] hover:text-red-500 text-xs flex-shrink-0"
+                className="text-[var(--color-text-secondary)] hover:text-rose-500 text-xs flex-shrink-0"
                 title="Delete"
               >
                 ×

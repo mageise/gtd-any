@@ -96,7 +96,7 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
               <span className="text-xs text-[var(--color-text-secondary)]">{totalCount} thought{totalCount !== 1 ? 's' : ''} captured</span>
               <button
                 onClick={clearAll}
-                className="text-xs text-[var(--color-text-secondary)] hover:text-red-500 transition-colors"
+                className="text-xs text-[var(--color-text-secondary)] hover:text-rose-500 transition-colors"
               >
                 Clear all
               </button>
@@ -142,14 +142,14 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
               )}
               <button
                 onClick={() => handleGraduate(item)}
-                className="text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] text-xs"
+                className="text-[var(--color-text-secondary)] hover:text-emerald-500 text-xs"
                 title="Move to tasks"
               >
                 ✓
               </button>
               <button
                 onClick={() => handleDelete(item.id)}
-                className="text-[var(--color-text-secondary)] hover:text-red-500 text-xs"
+                className="text-[var(--color-text-secondary)] hover:text-rose-500 text-xs"
                 title="Delete"
               >
                 ×

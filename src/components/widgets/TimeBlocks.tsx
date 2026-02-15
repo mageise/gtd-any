@@ -56,7 +56,7 @@ function TimeBlockItem({
             onChange={(e) => setEditTitle(e.target.value)}
             onBlur={handleTitleSubmit}
             onKeyDown={(e) => e.key === 'Enter' && handleTitleSubmit()}
-            className="w-full bg-transparent text-sm text-[var(--color-text-primary)] outline-none border-b border-[var(--color-accent)]"
+            className="w-full bg-transparent text-base text-[var(--color-text-primary)] outline-none border-b border-[var(--color-accent)]"
           />
         ) : (
           <button
@@ -114,7 +114,7 @@ export function TimeBlocks() {
     });
 
     return () => intervals.forEach(clearInterval);
-  }, [blocks.map(b => b.isRunning).join(',')]);
+  }, [blocks, setBlocks]);
 
   const handleToggle = (id: string) => {
     setBlocks((prev: TimeBlock[]) =>

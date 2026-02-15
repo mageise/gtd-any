@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { WidgetContainer } from '../WidgetContainer';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import type { Quote } from '../../types';
@@ -23,13 +23,7 @@ export function DailyQuote() {
 
   const today = new Date().toDateString();
 
-  useEffect(() => {
-    if (quoteDate !== today) {
-      fetchQuote();
-    }
-  }, [quoteDate, today]);
-
-  const fetchQuote = async () => {
+  const fetchQuote = useCallback(async () => {
     setLoading(true);
     try {
       const controller = new AbortController();
@@ -54,7 +48,13 @@ export function DailyQuote() {
       setQuoteDate(today);
       setLoading(false);
     }
-  };
+  }, [setQuote, setQuoteDate, today]);
+
+  useEffect(() => {
+    if (quoteDate !== today) {
+      fetchQuote();
+    }
+  }, [quoteDate, today, fetchQuote]);
 
   return (
     <WidgetContainer title="Daily Quote" footer={quote?.author}>

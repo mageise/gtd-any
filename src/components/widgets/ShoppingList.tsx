@@ -63,7 +63,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
         prev.map((i: ShoppingItem) => (i.id === id ? { ...i, completed: !i.completed } : i))
       );
       setPendingToggle(null);
-    }, 250);
+    }, 300);
   };
 
   const handleAdd = (e: React.FormEvent) => {
@@ -187,7 +187,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Add item..."
-          className="w-full px-3 py-2 pr-8 bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] rounded-lg text-sm outline-none focus:ring-2 focus:ring-[var(--color-accent)] placeholder:text-[var(--color-text-secondary)]"
+          className="w-full px-3 py-2 pr-8 bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] rounded-lg text-base outline-none focus:ring-2 focus:ring-[var(--color-accent)] placeholder:text-[var(--color-text-secondary)]"
         />
         <button
           type="button"
@@ -232,7 +232,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
             >
               <button
                 onClick={() => toggleItem(item.id)}
-                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors flex-shrink-0 ${
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-150 flex-shrink-0 active:scale-125 ${
                   item.completed
                     ? 'bg-emerald-500 border-emerald-500 text-white'
                     : 'border-[var(--color-text-secondary)] hover:border-[var(--color-accent)]'
@@ -248,7 +248,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
                   onChange={(e) => setEditText(e.target.value)}
                   onBlur={saveEdit}
                   onKeyDown={handleKeyDown}
-                  className="flex-1 px-2 py-1 bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] rounded text-sm outline-none"
+                  className="flex-1 px-2 py-1 bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] rounded text-base outline-none"
                 />
               ) : (
                 <span 

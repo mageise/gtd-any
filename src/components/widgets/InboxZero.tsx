@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { WidgetContainer } from '../WidgetContainer';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import type { InboxItem, Task } from '../../types';
 
 const INBOX_KEY = 'daily-dashboard-inbox';
@@ -9,19 +10,11 @@ interface InboxZeroProps {
 }
 
 export function InboxZero({ setTasks }: InboxZeroProps) {
-  const [inbox, setInbox] = useState<InboxItem[]>(() => {
-    const stored = localStorage.getItem(INBOX_KEY);
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [inbox, setInbox] = useLocalStorage<InboxItem[]>(INBOX_KEY, []);
   const [input, setInput] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const saveInbox = (items: InboxItem[]) => {
-    setInbox(items);
-    localStorage.setItem(INBOX_KEY, JSON.stringify(items));
-  };
 
   useEffect(() => {
     if (editingId && inputRef.current) {
@@ -38,7 +31,7 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
       text: input.trim(),
       createdAt: Date.now(),
     };
-    saveInbox([newItem, ...inbox]);
+    setInbox([newItem, ...inbox]);
     setInput('');
   };
 
@@ -50,11 +43,11 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
       createdAt: item.createdAt,
     };
     setTasks((prev: Task[]) => [newTask, ...prev]);
-    saveInbox(inbox.filter((i: InboxItem) => i.id !== item.id));
+    setInbox(inbox.filter((i: InboxItem) => i.id !== item.id));
   };
 
   const handleDelete = (id: string) => {
-    saveInbox(inbox.filter((i: InboxItem) => i.id !== id));
+    setInbox(inbox.filter((i: InboxItem) => i.id !== id));
   };
 
   const startEditing = (item: InboxItem) => {
@@ -64,7 +57,7 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
 
   const saveEdit = () => {
     if (editingId && editText.trim()) {
-      saveInbox(inbox.map((i: InboxItem) => 
+      setInbox(inbox.map((i: InboxItem) => 
         i.id === editingId ? { ...i, text: editText.trim() } : i
       ));
     }
@@ -86,7 +79,7 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
   };
 
   const clearAll = () => {
-    saveInbox([]);
+    setInbox([]);
   };
 
   const totalCount = inbox.length;
@@ -118,7 +111,7 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Capture thought..."
-          className="w-full px-3 py-2 bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] rounded-lg text-sm outline-none focus:ring-2 focus:ring-[var(--color-accent)] placeholder:text-[var(--color-text-secondary)]"
+          className="w-full px-3 py-2 bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] rounded-lg text-base outline-none focus:ring-2 focus:ring-[var(--color-accent)] placeholder:text-[var(--color-text-secondary)]"
         />
       </form>
       
@@ -137,7 +130,7 @@ export function InboxZero({ setTasks }: InboxZeroProps) {
                   onChange={(e) => setEditText(e.target.value)}
                   onBlur={saveEdit}
                   onKeyDown={handleKeyDown}
-                  className="flex-1 px-2 py-1 bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] rounded text-sm outline-none"
+                  className="flex-1 px-2 py-1 bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] rounded text-base outline-none"
                 />
               ) : (
                 <span 

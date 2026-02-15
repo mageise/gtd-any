@@ -11,6 +11,7 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 5. **Time Blocks** - 3 preset time blocks with Pomodoro-style timers (editable titles)
 6. **BTC Price** - Live Bitcoin price (EUR), manual refresh, shows change vs previous day
 7. **Stock Price** - Cloudflare stock price (EUR), manual refresh, shows change vs previous day
+8. **Tetris** - Fully playable Tetris with tap controls, 5-min limit, high score tracking
 
 ## Tech Stack
 - React 18
@@ -48,7 +49,8 @@ src/
 │   │   ├── TasksToday.tsx
 │   │   ├── ShoppingList.tsx
 │   │   ├── BTCPrice.tsx
-│   │   └── StockPrice.tsx
+│   │   ├── StockPrice.tsx
+│   │   └── Tetris.tsx
 │   ├── Layout.tsx
 │   └── WidgetContainer.tsx
 ├── hooks/
@@ -103,6 +105,32 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 ### BTC & Stock Price
 - [ ] Make currency configurable (defaults to EUR)
 - [ ] Add price alerts (notify when price crosses threshold)
+
+### Mini Games
+Quick brain breaks without leaving the app. Productivity-boosting for quick mental resets or decision making.
+
+#### Tetris (Done)
+- [x] Canvas-based 10x20 grid
+- [x] Tap controls (left/center/right zones)
+- [x] Long press center for fast drop
+- [x] Keyboard controls (arrow keys)
+- [x] 5-minute time limit
+- [x] Score, level, lines tracking
+- [x] High score in localStorage
+- [x] Give Up button
+
+#### Future Tetris Enhancements
+- [ ] Show next piece preview
+- [ ] Ghost piece (where piece will land)
+- [ ] Pause feature (ESC key)
+- [ ] Hard drop (instant drop)
+- [ ] Standard Tetris scoring (100/300/500/800 for 1/2/3/4 lines)
+- [ ] Rotate counter-clockwise
+
+#### Other Games
+- [ ] Coin flip - Binary decisions (do X or Y?)
+- [ ] Dice roll - Random selection (which task first?)
+- [ ] Random number - Pick from a range
 
 ### Messages
 - [ ] Create simple widget to display messages to the user

@@ -8,6 +8,7 @@ import { TasksToday } from './components/widgets/TasksToday';
 import { ShoppingList } from './components/widgets/ShoppingList';
 import { BTCPrice } from './components/widgets/BTCPrice';
 import { StockPrice } from './components/widgets/StockPrice';
+import { Tetris } from './components/widgets/Tetris';
 import type { Task, ShoppingItem } from './types';
 
 const TASKS_KEY = 'daily-dashboard-tasks';
@@ -28,6 +29,9 @@ function App() {
             <StockPrice />
           </ErrorBoundary>
         </WidgetPair>
+        <ErrorBoundary>
+          <Tetris />
+        </ErrorBoundary>
         <ErrorBoundary>
           <InboxZero setTasks={setTasks} />
         </ErrorBoundary>

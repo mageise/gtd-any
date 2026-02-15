@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, type ReactNode, type ReactElement } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 
 interface MinimalModeContextType {
   minimalMode: boolean;
@@ -10,7 +10,7 @@ export const MinimalModeContext = createContext<MinimalModeContextType | undefin
 
 const MINIMAL_MODE_KEY = 'daily-dashboard-minimal-mode';
 
-export function MinimalModeProvider({ children }: { children: ReactNode }): ReactElement {
+export function MinimalModeProvider({ children }: { children: ReactNode }) {
   const [minimalMode, setMinimalMode] = useState(() => {
     try {
       const stored = localStorage.getItem(MINIMAL_MODE_KEY);

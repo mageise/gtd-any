@@ -86,6 +86,7 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Add more widgets (Daily Focus/Intention, Habit Tracker, Calendar, Notes)
 - [ ] Make widgets reorderable (drag-and-drop)
 - [ ] Allow enabling/disabling widgets
+- [ ] Allow full screen mode for full + tall widgets (e.g. games)
 
 ### Daily Quote
 - [ ] Find other API (api.quotable.io often unavailable)
@@ -109,21 +110,11 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 ### Mini Games
 Quick brain breaks without leaving the app. Productivity-boosting for quick mental resets or decision making.
 
-#### Tetris (Done)
-- [x] Canvas-based 10x20 grid
-- [x] Tap controls (left/center/right zones)
-- [x] Long press center for fast drop
-- [x] Keyboard controls (arrow keys)
-- [x] 5-minute time limit
-- [x] Score, level, lines tracking
-- [x] High score in localStorage
-- [x] Give Up button
-
-#### Future Tetris Enhancements
+#### Tetris
 - [ ] Show next piece preview
 - [ ] Ghost piece (where piece will land)
 - [ ] Pause feature (ESC key)
-- [ ] Hard drop (instant drop)
+- [ ] Hard drop: add key "Space" for desktop
 - [ ] Standard Tetris scoring (100/300/500/800 for 1/2/3/4 lines)
 - [ ] Rotate counter-clockwise
 

@@ -101,8 +101,6 @@ export function Tetris() {
         if (cell && typeof cell === 'string') {
           ctx.fillStyle = cell;
           ctx.fillRect(c * CELL_SIZE, r * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1);
-          ctx.strokeStyle = '#2a2a3e';
-          ctx.strokeRect(c * CELL_SIZE, r * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1);
         }
       }
     }
@@ -115,8 +113,6 @@ export function Tetris() {
             const drawX = (current.x + c) * CELL_SIZE;
             const drawY = (current.y + r) * CELL_SIZE;
             ctx.fillRect(drawX, drawY, CELL_SIZE - 1, CELL_SIZE - 1);
-            ctx.strokeStyle = '#2a2a3e';
-            ctx.strokeRect(drawX, drawY, CELL_SIZE - 1, CELL_SIZE - 1);
           }
         }
       }
@@ -388,8 +384,6 @@ export function Tetris() {
   }, [gameState, movePiece, rotatePiece]);
   
   const longPressTimerRef = useRef<number | null>(null);
-  const lastPointerXRef = useRef<number>(0);
-  const isLongPressRef = useRef(false);
   
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     if (gameState !== 'playing') return;
@@ -399,18 +393,9 @@ export function Tetris() {
     
     canvas.setPointerCapture(e.pointerId);
     
-    const rect = canvas.getBoundingClientRect();
-    lastPointerXRef.current = e.clientX - rect.left;
-    const width = rect.width;
-    const x = lastPointerXRef.current;
-    
-    if (x >= width / 3 && x <= (width * 2) / 3) {
-      isLongPressRef.current = false;
-      longPressTimerRef.current = window.setTimeout(() => {
-        isLongPressRef.current = true;
-        movePiece('down');
-      }, 400);
-    }
+    longPressTimerRef.current = window.setTimeout(() => {
+      movePiece('down');
+    }, 400);
   }, [gameState, movePiece]);
   
   const handlePointerUp = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -424,42 +409,10 @@ export function Tetris() {
       longPressTimerRef.current = null;
     }
     
-    if (isLongPressRef.current) {
-      isLongPressRef.current = false;
-      return;
-    }
-    
     if (gameState !== 'playing') return;
     
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const width = rect.width;
-    
-    const current = currentRef.current;
-    const board = boardRef.current;
-    
-    if (!current) return;
-    
-    if (x < width / 3) {
-      const moved = { ...current, x: current.x - 1 };
-      if (isValid(board, moved)) {
-        currentRef.current = moved;
-        draw(board, currentRef.current);
-      }
-    } else if (x > (width * 2) / 3) {
-      const moved = { ...current, x: current.x + 1 };
-      if (isValid(board, moved)) {
-        currentRef.current = moved;
-        draw(board, currentRef.current);
-      }
-    } else {
-      const rotated = { ...current, shape: rotateMatrix(current.shape) };
-      if (isValid(board, rotated)) {
-        currentRef.current = rotated;
-        draw(board, currentRef.current);
-      }
-    }
-  }, [gameState, isValid, draw]);
+    rotatePiece();
+  }, [gameState, rotatePiece]);
   
   const formatTime = (seconds: number): string => {
     const m = Math.floor(seconds / 60);
@@ -526,7 +479,7 @@ export function Tetris() {
                 ))}
               </p>
               {highScore > 0 && (
-                <p className="text-sm font-medium text-[var(--color-text-primary)]">Best: {highScore}</p>
+                <p className="text-sm font-medium text-[var(--color-text-primary)]">High Score: {highScore}</p>
               )}
               <button
                 onClick={() => { setScore(0); setLines(0); setLevel(1); setRunningTime(0); setTetrisColors(getRandomColors()); setGameState('playing'); }}

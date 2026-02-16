@@ -38,9 +38,12 @@ export interface FinanceData {
 }
 
 export interface StockData {
+  ticker: string;
   stockPrice: number;
   previousPrice?: number;
   lastUpdated: number | null;
+  companyName?: string;
+  currency?: string;
 }
 
 export interface AppState {

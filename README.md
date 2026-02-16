@@ -10,7 +10,7 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 4. **Shopping List** - Grocery list with quick-add categories and quantity prefixes (inline editing)
 5. **Time Blocks** - 3 preset time blocks with Pomodoro-style timers (editable titles)
 6. **BTC Price** - Live Bitcoin price (EUR), manual refresh, shows change vs previous day
-7. **Stock Price** - Cloudflare stock price (EUR), manual refresh, shows change vs previous day
+7. **Stock Price** - Stock price (any ticker), manual refresh, shows % change vs previous day, dynamic currency from API
 8. **Tetris** - Fully playable Tetris with tap controls, 5-min limit, high score tracking
 
 ## Tech Stack
@@ -68,7 +68,7 @@ src/
 - `Task` - id, text, completed, createdAt
 - `ShoppingItem` - id, text, completed, createdAt
 - `FinanceData` - btcPrice, previousPrice, lastUpdated
-- `StockData` - stockPrice, previousPrice, lastUpdated
+- `StockData` - ticker, stockPrice, previousPrice, lastUpdated, companyName, currency
 
 ## Issues
 
@@ -104,7 +104,6 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Break timer between blocks
 
 ### BTC & Stock Price
-- [ ] Make currency configurable (defaults to EUR)
 - [ ] Add price alerts (notify when price crosses threshold)
 
 ### Mini Games

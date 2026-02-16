@@ -4,7 +4,24 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
+      if (!item) return initialValue;
+
+      const parsed = JSON.parse(item);
+
+      // Migrate stale data: merge with defaults for missing keys (only for objects)
+      if (typeof parsed === 'object' && parsed !== null) {
+        const needsMigration = Object.keys(initialValue as object).some(
+          (key) => !(key in parsed)
+        );
+
+        if (needsMigration) {
+          const migrated = { ...(initialValue as object), ...parsed } as T;
+          window.localStorage.setItem(key, JSON.stringify(migrated));
+          return migrated;
+        }
+      }
+
+      return parsed;
     } catch (error) {
       console.error(`Error reading localStorage key "${key}":`, error);
       return initialValue;

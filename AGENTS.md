@@ -363,6 +363,30 @@ When adding new widgets:
 - Use `console.log` to verify state changes
 - Ensure `useLocalStorage` is used consistently (not direct localStorage)
 
+### Debugging Complex Issues with Subagents
+
+When facing complex bugs or need to explore the codebase deeply:
+
+**Task tool** - Launches specialized sub-agents (part of OpenCode tooling)
+
+| Agent | Purpose |
+|-------|---------|
+| `explore` | Fast codebase exploration - find files, search code patterns, answer questions |
+| `general` | Multi-step task execution - complex refactoring, writing tests, larger features |
+
+**When to use:**
+- `explore`: Hard-to-find bugs, understanding unfamiliar code, searching for patterns
+- `general`: Research, large refactoring, writing tests, multi-step feature implementation
+
+**Example - using explore for a bug:**
+```
+Task tool:
+- command: debug tetris row clearing bug
+- subagent_type: explore
+- prompt: "Find why the Tetris board clears completely when rows are completed. 
+  Look for React useEffect issues, state management problems, or logic errors."
+```
+
 ---
 
 ## 8. Testing Guidelines

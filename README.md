@@ -113,10 +113,10 @@ Quick brain breaks without leaving the app. Productivity-boosting for quick ment
 #### Tetris
 - [ ] Show next piece preview
 - [ ] Ghost piece (where piece will land)
-- [ ] Pause feature (ESC key)
-- [ ] Hard drop: add key "Space" for desktop
+- [ ] Pause feature (where to add action in UI?)
 - [ ] Standard Tetris scoring (100/300/500/800 for 1/2/3/4 lines)
 - [ ] Rotate counter-clockwise
+- [ ] Allow full screen mode (immersive gameplay)
 
 #### Other Games
 - [ ] Coin flip - Binary decisions (do X or Y?)

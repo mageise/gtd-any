@@ -271,7 +271,7 @@ export function Tetris() {
         gameLoopRef.current = null;
       }
     };
-  }, [gameState, initBoard, spawnPiece, draw]);
+  }, [gameState, initBoard, spawnPiece, draw]); // eslint-disable-line react-hooks/exhaustive-deps
   
   useEffect(() => {
     if (gameState === 'idle') {
@@ -373,15 +373,18 @@ export function Tetris() {
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
         movePiece('down');
-      } else if (e.key === 'ArrowUp' || e.key === ' ') {
+      } else if (e.key === 'ArrowUp') {
         e.preventDefault();
         rotatePiece();
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        hardDrop();
       }
     };
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameState, movePiece, rotatePiece]);
+  }, [gameState, movePiece, rotatePiece, hardDrop]);
   
   const longPressTimerRef = useRef<number | null>(null);
   
@@ -457,7 +460,7 @@ export function Tetris() {
           <button
             onClick={() => gameState === 'playing' && movePiece('left')}
             disabled={gameState !== 'playing'}
-            className="w-12 h-12 bg-[#a855f7]/30 text-[#a855f7] rounded-lg text-2xl font-bold hover:bg-[#a855f7]/50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="w-12 h-36 bg-[#a855f7]/30 text-[#a855f7] rounded-lg text-2xl font-bold hover:bg-[#a855f7]/50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
             ←
           </button>
@@ -488,7 +491,10 @@ export function Tetris() {
                 Start
               </button>
               <p className="text-xs text-[var(--color-text-secondary)] text-center">
-                Desktop: Arrow keys ← → ↑ ↓
+                Desktop<br />
+                ─ ─ ─ ─ ─ ─ ─ ─ ─ ─<br />
+                Arrow keys ← → ↑ ↓<br />
+                Space = Drop
               </p>
             </div>
           )}
@@ -505,7 +511,10 @@ export function Tetris() {
                 Play Again
               </button>
               <p className="text-xs text-[var(--color-text-secondary)] text-center">
-                Desktop: Arrow keys ← → ↑ ↓
+                Desktop<br />
+                ─ ─ ─ ─ ─ ─ ─ ─ ─ ─<br />
+                Arrow keys ← → ↑ ↓<br />
+                Space = Drop
               </p>
             </div>
           )}
@@ -513,7 +522,7 @@ export function Tetris() {
           <button
             onClick={() => gameState === 'playing' && movePiece('right')}
             disabled={gameState !== 'playing'}
-            className="w-12 h-12 bg-[#a855f7]/30 text-[#a855f7] rounded-lg text-2xl font-bold hover:bg-[#a855f7]/50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="w-12 h-36 bg-[#a855f7]/30 text-[#a855f7] rounded-lg text-2xl font-bold hover:bg-[#a855f7]/50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           >
             →
           </button>

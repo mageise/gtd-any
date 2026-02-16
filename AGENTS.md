@@ -86,12 +86,10 @@ Quick daily info, task handling and time management with minimal friction "get s
 
 ### Sizes
 
-| Size | Width | Height | Use Case |
-|------|-------|--------|----------|
-| `quarter` | 25% | std | Very compact info (single number, status) |
-| `half` | 50% | std | Compact info, pairs well |
-| `full` | 100% | std | Standard widgets |
-| `tall` | 100% | auto | Lists, expandable content |
+| Size | Width | Use Case |
+|------|-------|----------|
+| `half` | 50% | Compact info, use WidgetPair for side-by-side |
+| `full` | 100% | Standard widgets |
 
 ### Categories
 
@@ -108,9 +106,21 @@ Every widget has:
 2. **Content** - Main widget purpose
 3. **Footer** - Optional (metadata, quick actions)
 
+### Footer
+
+Every widget footer follows this pattern:
+
+1. **Inactive (no data):** Single informational text on the left
+   - Example: "No items yet", "Tap Start to play!"
+
+2. **Active (has data):** Counts/info on the left, action on the right
+   - Example: "3/5 tasks done" + "Clear all" button
+
+Exception: Info widgets with limited space (e.g., Price widgets) may show only informational text.
+
 ### Layout
 
-- Use `WidgetPair` component for side-by-side half/quarter widgets
+- Use `WidgetPair` component for side-by-side half widgets
 - Decide size per widget based on content, not just category
 - Half widgets can be paired or stand alone (no strict rules)
 
@@ -124,9 +134,8 @@ Before creating a new widget, answer:
    - Does it fit: "neat, simple handling, actionable, no thinking involved"?
 
 2. **Size decision:**
-   - quarter: single metric?
    - half: compact info, pairs with another half?
-   - full/tall: content-heavy?
+   - full: content-heavy?
 
 3. **Value check:**
    - Does it add value or clutter?

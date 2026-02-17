@@ -10,7 +10,7 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 4. **Shopping List** - Grocery list with quick-add categories and quantity prefixes (inline editing)
 5. **Time Blocks** - 3 preset time blocks with Pomodoro-style timers (editable titles)
 6. **BTC Price** - Live Bitcoin price (EUR), manual refresh, shows change vs previous day
-7. **Stock Price** - Stock price (any ticker), manual refresh, shows % change vs previous day, dynamic currency from API
+7. **Stock Price** - Multiple stock tracking, manual refresh, shows % change vs previous day, dynamic currency, horizontal slider for navigation, config mode for managing stock list
 8. **Tetris** - Fully playable Tetris with tap controls, 5-min limit, high score tracking
 
 ## Tech Stack
@@ -23,20 +23,29 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 
 ## Features
 
-### Minimal Mode
-Toggle minimal mode via ◉ button in the footer. Hides widget titles and footers, reduces padding and spacing for maximum screen space. State is persisted in localStorage.
+### Mode Toggle
+Three view modes controlled via the button in the footer (cycles: ○ → ◐ → ◉):
+
+- **Regular (○)** - Full widget with title, content, and footer
+- **Minimal (◐)** - Content only, reduced padding for maximum screen space
+- **Config (◉)** - Full widget with additional config content, WidgetPairs stack vertically for more space
+
+State is persisted in localStorage.
+
+Some widgets support config mode with additional settings (e.g., Stock Price allows adding/removing stocks).
 
 ## Architecture
 
 ### Data Storage
 All data persisted in localStorage:
+- `daily-dashboard-mode` - Current view mode (regular/minimal/config)
 - `daily-dashboard-quote` / `daily-dashboard-quote-date`
 - `daily-dashboard-timeblocks`
 - `daily-dashboard-inbox`
 - `daily-dashboard-tasks`
 - `daily-dashboard-shopping`
 - `daily-dashboard-finance`
-- `daily-dashboard-stock`
+- `daily-dashboard-stocks`
 
 ### Project Structure
 ```
@@ -52,9 +61,11 @@ src/
 │   │   ├── StockPrice.tsx
 │   │   └── Tetris.tsx
 │   ├── Layout.tsx
-│   └── WidgetContainer.tsx
+│   ├── WidgetContainer.tsx
+│   └── WidgetPair.tsx
 ├── hooks/
-│   └── useLocalStorage.ts
+│   ├── useLocalStorage.ts
+│   └── useMode.tsx
 ├── types/
 │   └── index.ts
 ├── App.tsx
@@ -69,6 +80,7 @@ src/
 - `ShoppingItem` - id, text, completed, createdAt
 - `FinanceData` - btcPrice, previousPrice, lastUpdated
 - `StockData` - ticker, stockPrice, previousPrice, lastUpdated, companyName, currency
+- `StockList` - stocks (array), activeIndex
 
 ## Issues
 

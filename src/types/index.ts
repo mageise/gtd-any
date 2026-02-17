@@ -46,6 +46,11 @@ export interface StockData {
   currency?: string;
 }
 
+export interface StockList {
+  stocks: StockData[];
+  activeIndex: number;
+}
+
 export interface AppState {
   timeBlocks: TimeBlock[];
   inbox: InboxItem[];

@@ -82,8 +82,7 @@ export function StockPrice() {
   const [stock, setStock] = useLocalStorage<StockData>(STOCK_KEY, DEFAULT_STOCK);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [tickerInput, setTickerInput] = useState('');
+  const [configTicker, setConfigTicker] = useState('');
 
   const fetchPrice = async (ticker?: string) => {
     const targetTicker = ticker || stock.ticker;
@@ -125,17 +124,12 @@ export function StockPrice() {
     }
   };
 
-  const handleEditStart = () => {
-    setTickerInput(stock.ticker);
-    setIsEditing(true);
-  };
-
-  const handleSave = () => {
-    const newTicker = tickerInput.trim().toUpperCase();
+  const handleConfigSave = () => {
+    const newTicker = configTicker.trim().toUpperCase();
     if (newTicker && newTicker !== stock.ticker) {
       fetchPrice(newTicker);
     }
-    setIsEditing(false);
+    setConfigTicker('');
   };
 
   const getFooter = () => {
@@ -161,8 +155,26 @@ export function StockPrice() {
   const firstLetter = getFirstLetter(stock.companyName, stock.ticker);
   const displayName = getDisplayName(stock.companyName, stock.ticker);
 
+  const configContent = (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between text-sm">
+        <span className="text-[var(--color-text-secondary)]">Current:</span>
+        <span className="font-medium">{stock.ticker} · {stock.companyName || 'Unknown'}</span>
+      </div>
+      <input
+        type="text"
+        value={configTicker}
+        onChange={(e) => setConfigTicker(e.target.value.toUpperCase())}
+        onBlur={handleConfigSave}
+        onKeyDown={(e) => e.key === 'Enter' && handleConfigSave()}
+        placeholder="Enter new ticker..."
+        className="w-full text-sm bg-[var(--color-bg-primary)] border border-[var(--color-bg-tertiary)] rounded px-3 py-2 outline-none focus:border-[var(--color-accent)]"
+      />
+    </div>
+  );
+
   return (
-    <WidgetContainer title="Stock Price" footer={getFooter()}>
+    <WidgetContainer title="Stock Price" footer={getFooter()} configContent={configContent}>
       <div className="flex items-center gap-3">
         <button
           onClick={() => fetchPrice()}
@@ -172,24 +184,9 @@ export function StockPrice() {
           {loading ? '...' : firstLetter}
         </button>
         <div className="min-w-0 flex-1">
-          {isEditing ? (
-            <input
-              autoFocus
-              type="text"
-              value={tickerInput}
-              onChange={(e) => setTickerInput(e.target.value.toUpperCase())}
-              onBlur={handleSave}
-              onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-              className="w-full text-base bg-transparent border-b border-[var(--color-accent)] outline-none text-[var(--color-text-secondary)]"
-            />
-          ) : (
-            <p
-              onClick={handleEditStart}
-              className="text-xs text-[var(--color-text-secondary)] cursor-pointer hover:underline truncate"
-            >
-              {displayName}
-            </p>
-          )}
+          <p className="text-xs text-[var(--color-text-secondary)] truncate">
+            {displayName}
+          </p>
           <p className="text-lg font-semibold text-[var(--color-text-primary)]">
             {loading ? '...' : stock.stockPrice > 0 ? formatPrice(stock.stockPrice, stock.currency) : '—'}
           </p>

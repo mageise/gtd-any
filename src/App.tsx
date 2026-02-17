@@ -1,5 +1,5 @@
 import { useLocalStorage } from './hooks/useLocalStorage';
-import { MinimalModeProvider } from './hooks/useMinimalMode';
+import { ModeProvider } from './hooks/useMode';
 import { Layout } from './components/Layout';
 import { WidgetPair } from './components/WidgetPair';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -19,7 +19,7 @@ function App() {
   const [shopping, setShopping] = useLocalStorage<ShoppingItem[]>(SHOPPING_KEY, []);
 
   return (
-    <MinimalModeProvider>
+    <ModeProvider>
       <Layout>
         <WidgetPair>
           <ErrorBoundary>
@@ -42,7 +42,7 @@ function App() {
           <ShoppingList items={shopping} setItems={setShopping} />
         </ErrorBoundary>
       </Layout>
-    </MinimalModeProvider>
+    </ModeProvider>
   );
 }
 

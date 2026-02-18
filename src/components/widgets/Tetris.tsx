@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { WidgetContainer } from '../WidgetContainer';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 const COLS = 10;
 const ROWS = 20;
-const CELL_SIZE = 18;
+const DEFAULT_cellSize = 18;
 
 const TETROMINOES = {
   I: { shape: [[1, 1, 1, 1]], color: '#3b82f6' },
@@ -58,6 +58,14 @@ export function Tetris() {
   const lastDropRef = useRef<number>(0);
   
   const [highScore, setHighScore] = useLocalStorage<number>('daily-dashboard-tetris-highscore', 0);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const cellSize = useMemo(() => {
+    if (!isFullScreen) return DEFAULT_cellSize;
+    const availableWidth = window.innerWidth - 120;
+    const maxCellSize = Math.floor(availableWidth / COLS * 0.85);
+    return Math.max(DEFAULT_cellSize, Math.min(maxCellSize, 40));
+  }, [isFullScreen]);
   
   const [gameState, setGameState] = useState<'idle' | 'playing' | 'gameover'>('idle');
   const [score, setScore] = useState(0);
@@ -93,14 +101,14 @@ export function Tetris() {
     if (!ctx) return;
     
     ctx.fillStyle = '#1e1e2e';
-    ctx.fillRect(0, 0, COLS * CELL_SIZE, ROWS * CELL_SIZE);
+    ctx.fillRect(0, 0, COLS * cellSize, ROWS * cellSize);
     
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
         const cell = board[r][c];
         if (cell && typeof cell === 'string') {
           ctx.fillStyle = cell;
-          ctx.fillRect(c * CELL_SIZE, r * CELL_SIZE, CELL_SIZE - 1, CELL_SIZE - 1);
+          ctx.fillRect(c * cellSize, r * cellSize, cellSize - 1, cellSize - 1);
         }
       }
     }
@@ -110,14 +118,14 @@ export function Tetris() {
       for (let r = 0; r < current.shape.length; r++) {
         for (let c = 0; c < current.shape[r].length; c++) {
           if (current.shape[r][c]) {
-            const drawX = (current.x + c) * CELL_SIZE;
-            const drawY = (current.y + r) * CELL_SIZE;
-            ctx.fillRect(drawX, drawY, CELL_SIZE - 1, CELL_SIZE - 1);
+            const drawX = (current.x + c) * cellSize;
+            const drawY = (current.y + r) * cellSize;
+            ctx.fillRect(drawX, drawY, cellSize - 1, cellSize - 1);
           }
         }
       }
     }
-  }, []);
+  }, [cellSize]);
   
   const isValid = useCallback((board: (number | string)[][], piece: Tetromino): boolean => {
     for (let r = 0; r < piece.shape.length; r++) {
@@ -271,7 +279,7 @@ export function Tetris() {
         gameLoopRef.current = null;
       }
     };
-  }, [gameState, initBoard, spawnPiece, draw]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [gameState, initBoard, spawnPiece]); // eslint-disable-line react-hooks/exhaustive-deps
   
   useEffect(() => {
     if (gameState === 'idle') {
@@ -288,7 +296,14 @@ export function Tetris() {
     
     return () => clearInterval(timer);
   }, [gameState]);
-  
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas && (gameState === 'playing' || gameState === 'gameover')) {
+      draw(boardRef.current, currentRef.current);
+    }
+  }, [cellSize, gameState, draw]);
+
   const movePiece = useCallback((direction: 'left' | 'right' | 'down') => {
     const current = currentRef.current;
     const board = boardRef.current;
@@ -442,16 +457,21 @@ export function Tetris() {
   );
   
   return (
-    <WidgetContainer title="Tetris" footer={footer}>
+    <WidgetContainer 
+      title="Tetris" 
+      footer={footer}
+      isFullScreen={isFullScreen}
+      onFullScreenToggle={() => setIsFullScreen(!isFullScreen)}
+    >
       <div className="flex flex-col items-center gap-2">
         {gameState === 'idle' && (
-          <div className="flex justify-between w-full text-xs" style={{ width: COLS * CELL_SIZE }}>
+          <div className="flex justify-between w-full text-xs" style={{ width: COLS * cellSize }}>
             <span>Lines: 0 | Score: 0</span>
             <span>Level 1</span>
           </div>
         )}
         {(gameState === 'playing' || gameState === 'gameover') && (
-          <div className="flex justify-between w-full text-xs" style={{ width: COLS * CELL_SIZE }}>
+          <div className="flex justify-between w-full text-xs" style={{ width: COLS * cellSize }}>
             <span>Lines: {lines} | Score: {score}</span>
             <span>Level {level}</span>
           </div>
@@ -467,8 +487,8 @@ export function Tetris() {
           <div className="relative">
             <canvas
               ref={canvasRef}
-              width={COLS * CELL_SIZE}
-              height={ROWS * CELL_SIZE}
+              width={COLS * cellSize}
+              height={ROWS * cellSize}
               onPointerDown={handlePointerDown}
               onPointerUp={handlePointerUp}
               className="rounded-lg cursor-pointer touch-manipulation max-w-full"
@@ -531,7 +551,7 @@ export function Tetris() {
           onClick={() => gameState === 'playing' && hardDrop()}
           disabled={gameState !== 'playing'}
           className="w-full py-3 bg-[#a855f7]/40 text-[#a855f7] rounded-lg text-base font-bold hover:bg-[#a855f7]/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-          style={{ width: COLS * CELL_SIZE }}
+          style={{ width: COLS * cellSize }}
         >
           DROP
         </button>

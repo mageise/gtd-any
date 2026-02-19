@@ -29,7 +29,12 @@ Rule: Never commit/push without permission
 
 5. **Address Feedback** - Fix any issues if found
 
-6. **Request Commit** - Ask "Should I commit?" with draft message (50/72 rule):
+6. **Document** - Update documentation for significant changes:
+   - README.md: new or updated features/widgets, API changes, setup/config changes
+   - AGENTS.md: workflow changes or new guidelines as needed
+   - Skip for trivial fixes
+
+7. **Request Commit** - Ask "Should I commit?" with draft message (50/72 rule):
    - First line: max 50 chars, summary of what/why
    - Blank line
    - Body: max 72 chars per line, detailed explanation
@@ -42,7 +47,7 @@ Rule: Never commit/push without permission
    falls back to local quotes after 5 second timeout.
    ```
 
-7. **Request Deploy** - After commit, ask "Should I push to deploy?"
+8. **Request Deploy** - After commit, ask "Should I push to deploy?"
 
 ### Speed-Path for Small Fixes
 

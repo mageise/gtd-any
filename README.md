@@ -11,7 +11,7 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 5. **Time Blocks** - 3 preset time blocks with Pomodoro-style timers (editable titles)
 6. **BTC Price** - Live Bitcoin price (EUR), manual refresh, shows change vs previous day
 7. **Stock Price** - Multiple stock tracking, manual refresh, shows % change vs previous day, dynamic currency, horizontal slider for navigation, config mode for managing stock list
-8. **Tetris** - Fully playable Tetris with tap controls, 5-min limit, high score tracking
+8. **Tetris** - Fully playable Tetris with tap controls, fullscreen mode with Give Up button, high score tracking
 
 ## Tech Stack
 - React 18
@@ -127,7 +127,6 @@ Quick brain breaks without leaving the app. Productivity-boosting for quick ment
 - [ ] Pause feature (where to add action in UI?)
 - [ ] Standard Tetris scoring (100/300/500/800 for 1/2/3/4 lines)
 - [ ] Rotate counter-clockwise
-- [ ] Allow full screen mode (immersive gameplay)
 
 #### Other Games
 - [ ] Coin flip - Binary decisions (do X or Y?)

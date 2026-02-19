@@ -62,7 +62,7 @@ export function Tetris() {
 
   const cellSize = useMemo(() => {
     if (!isFullScreen) return DEFAULT_cellSize;
-    const availableWidth = window.innerWidth - 120;
+    const availableWidth = window.innerWidth - 100;
     const maxCellSize = Math.floor(availableWidth / COLS * 0.85);
     return Math.max(DEFAULT_cellSize, Math.min(maxCellSize, 40));
   }, [isFullScreen]);
@@ -71,7 +71,6 @@ export function Tetris() {
   const [score, setScore] = useState(0);
   const [lines, setLines] = useState(0);
   const [level, setLevel] = useState(1);
-  const [runningTime, setRunningTime] = useState(0);
   const [gameOverColor, setGameOverColor] = useState('');
   const getRandomColors = () => {
     const shuffled = [...TETROMINO_COLORS].sort(() => Math.random() - 0.5);
@@ -288,16 +287,6 @@ export function Tetris() {
   }, [gameState, draw, initBoard]);
   
   useEffect(() => {
-    if (gameState !== 'playing') return;
-    
-    const timer = setInterval(() => {
-      setRunningTime(prev => prev + 1);
-    }, 1000);
-    
-    return () => clearInterval(timer);
-  }, [gameState]);
-
-  useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas && (gameState === 'playing' || gameState === 'gameover')) {
       draw(boardRef.current, currentRef.current);
@@ -432,17 +421,12 @@ export function Tetris() {
     rotatePiece();
   }, [gameState, rotatePiece]);
   
-  const formatTime = (seconds: number): string => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
-  
   const footer = (
     <>
+      {gameState === 'idle' && <span>Tap Start to play!</span>}
       {gameState === 'playing' && (
         <span className="flex justify-between w-full">
-          <span>{formatTime(runningTime)}</span>
+          <span>Playing!</span>
           <button
             onClick={giveUp}
             className="text-xs text-[var(--color-text-secondary)] hover:text-rose-500"
@@ -451,7 +435,6 @@ export function Tetris() {
           </button>
         </span>
       )}
-      {gameState === 'idle' && <span>Tap Start to play!</span>}
       {gameState === 'gameover' && <span>Tap Play Again to start over!</span>}
     </>
   );
@@ -473,6 +456,17 @@ export function Tetris() {
         {(gameState === 'playing' || gameState === 'gameover') && (
           <div className="flex justify-between w-full text-xs" style={{ width: COLS * cellSize }}>
             <span>Lines: {lines} | Score: {score}</span>
+            {gameState === 'playing' && isFullScreen && (
+              <button
+                onClick={giveUp}
+                className="w-4 h-4 flex items-center justify-center bg-rose-500/80 hover:bg-rose-500 rounded-md text-white transition-colors"
+                title="Give Up"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="6" y="6" width="12" height="12" rx="1" />
+                </svg>
+              </button>
+            )}
             <span>Level {level}</span>
           </div>
         )}
@@ -484,78 +478,79 @@ export function Tetris() {
           >
             ←
           </button>
-          <div className="relative">
-            <canvas
-              ref={canvasRef}
-              width={COLS * cellSize}
-              height={ROWS * cellSize}
-              onPointerDown={handlePointerDown}
-              onPointerUp={handlePointerUp}
-              className="rounded-lg cursor-pointer touch-manipulation max-w-full"
-              style={{ maxHeight: '60vh' }}
-            />
-          {gameState === 'idle' && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[var(--color-bg-secondary)]/80 rounded-lg">
-              <p className="text-lg font-bold">
-                {'TETRIS'.split('').map((letter, i) => (
-                  <span key={i} style={{ color: tetrisColors[i] }}>{letter}</span>
-                ))}
-              </p>
-              {highScore > 0 && (
-                <p className="text-sm font-medium text-[var(--color-text-primary)]">High Score: {highScore}</p>
+          
+            <div className="relative">
+              <canvas
+                ref={canvasRef}
+                width={COLS * cellSize}
+                height={ROWS * cellSize}
+                onPointerDown={handlePointerDown}
+                onPointerUp={handlePointerUp}
+                className="rounded-lg cursor-pointer touch-manipulation max-w-full"
+                style={{ maxHeight: '60vh' }}
+              />
+              {gameState === 'idle' && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[var(--color-bg-secondary)]/80 rounded-lg">
+                  <p className="text-lg font-bold">
+                    {'TETRIS'.split('').map((letter, i) => (
+                      <span key={i} style={{ color: tetrisColors[i] }}>{letter}</span>
+                    ))}
+                  </p>
+                  {highScore > 0 && (
+                    <p className="text-sm font-medium text-[var(--color-text-primary)]">High Score: {highScore}</p>
+                  )}
+                  <button
+                    onClick={() => { setScore(0); setLines(0); setLevel(1); setTetrisColors(getRandomColors()); setGameState('playing'); }}
+                    className="px-6 py-3 bg-[#a855f7]/40 text-[#a855f7] rounded-lg text-base font-medium hover:bg-[#a855f7]/60 transition-colors"
+                  >
+                    Start
+                  </button>
+                  <p className="text-xs text-[var(--color-text-secondary)] text-center">
+                    Desktop<br />
+                    ─ ─ ─ ─ ─ ─ ─ ─ ─ ─<br />
+                    Arrow keys ← → ↑ ↓<br />
+                    Space = Drop
+                  </p>
+                </div>
               )}
-              <button
-                onClick={() => { setScore(0); setLines(0); setLevel(1); setRunningTime(0); setTetrisColors(getRandomColors()); setGameState('playing'); }}
-                className="px-6 py-3 bg-[#a855f7]/40 text-[#a855f7] rounded-lg text-base font-medium hover:bg-[#a855f7]/60 transition-colors"
-              >
-                Start
-              </button>
-              <p className="text-xs text-[var(--color-text-secondary)] text-center">
-                Desktop<br />
-                ─ ─ ─ ─ ─ ─ ─ ─ ─ ─<br />
-                Arrow keys ← → ↑ ↓<br />
-                Space = Drop
-              </p>
+              {gameState === 'gameover' && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[var(--color-bg-secondary)]/80 rounded-lg">
+                  <p className="text-lg font-bold" style={{ color: gameOverColor }}>GAME OVER</p>
+                  <p className="text-sm text-[var(--color-text-primary)]">
+                    Score: {score}
+                  </p>
+                  <button
+                    onClick={() => { setScore(0); setLines(0); setLevel(1); setGameOverColor(''); setTetrisColors(getRandomColors()); setGameState('playing'); }}
+                    className="px-6 py-3 bg-[#a855f7]/40 text-[#a855f7] rounded-lg text-base font-medium hover:bg-[#a855f7]/60 transition-colors"
+                  >
+                    Play Again
+                  </button>
+                  <p className="text-xs text-[var(--color-text-secondary)] text-center">
+                    Desktop<br />
+                    ─ ─ ─ ─ ─ ─ ─ ─ ─ ─<br />
+                    Arrow keys ← → ↑ ↓<br />
+                    Space = Drop
+                  </p>
+                </div>
+              )}
             </div>
-          )}
-          {gameState === 'gameover' && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[var(--color-bg-secondary)]/80 rounded-lg">
-              <p className="text-lg font-bold" style={{ color: gameOverColor }}>GAME OVER</p>
-              <p className="text-sm text-[var(--color-text-primary)]">
-                Score: {score}
-              </p>
-              <button
-                onClick={() => { setScore(0); setLines(0); setLevel(1); setRunningTime(0); setGameOverColor(''); setTetrisColors(getRandomColors()); setGameState('playing'); }}
-                className="px-6 py-3 bg-[#a855f7]/40 text-[#a855f7] rounded-lg text-base font-medium hover:bg-[#a855f7]/60 transition-colors"
-              >
-                Play Again
-              </button>
-              <p className="text-xs text-[var(--color-text-secondary)] text-center">
-                Desktop<br />
-                ─ ─ ─ ─ ─ ─ ─ ─ ─ ─<br />
-                Arrow keys ← → ↑ ↓<br />
-                Space = Drop
-              </p>
-            </div>
-          )}
-        </div>
+            <button
+              onClick={() => gameState === 'playing' && movePiece('right')}
+              disabled={gameState !== 'playing'}
+              className="w-12 h-36 bg-[#a855f7]/30 text-[#a855f7] rounded-lg text-2xl font-bold hover:bg-[#a855f7]/50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              →
+            </button>
+          </div>
           <button
-            onClick={() => gameState === 'playing' && movePiece('right')}
-            disabled={gameState !== 'playing'}
-            className="w-12 h-36 bg-[#a855f7]/30 text-[#a855f7] rounded-lg text-2xl font-bold hover:bg-[#a855f7]/50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-          >
-            →
-          </button>
+              onClick={() => gameState === 'playing' && hardDrop()}
+              disabled={gameState !== 'playing'}
+              className="w-full py-3 bg-[#a855f7]/40 text-[#a855f7] rounded-lg text-base font-bold hover:bg-[#a855f7]/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              style={{ width: COLS * cellSize }}
+            >
+              DROP
+          </button>          
         </div>
-        <button
-          onClick={() => gameState === 'playing' && hardDrop()}
-          disabled={gameState !== 'playing'}
-          className="w-full py-3 bg-[#a855f7]/40 text-[#a855f7] rounded-lg text-base font-bold hover:bg-[#a855f7]/60 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-          style={{ width: COLS * cellSize }}
-        >
-          DROP
-        </button>
-      </div>
     </WidgetContainer>
   );
 }

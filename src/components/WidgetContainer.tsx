@@ -44,7 +44,7 @@ export function WidgetContainer({ title, children, footer, configContent, isFull
   if (isFullScreen) {
     return (
       <div 
-        className="fixed inset-0 z-[100] bg-[var(--color-bg-secondary)] flex flex-col"
+        className="fixed inset-0 h-screen w-screen z-[100] bg-[var(--color-bg-secondary)] flex flex-col"
         style={{ 
           userSelect: 'none', 
           WebkitUserSelect: 'none',
@@ -70,13 +70,6 @@ export function WidgetContainer({ title, children, footer, configContent, isFull
         <div className="flex-1 overflow-hidden flex items-center justify-center">
           {children}
         </div>
-        {footer && (
-          <div className="mt-3">
-            <footer className="text-xs text-[var(--color-text-secondary)] h-5 flex items-center">
-              {footer}
-            </footer>
-          </div>
-        )}
       </div>
     );
   }

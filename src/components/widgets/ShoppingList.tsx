@@ -181,7 +181,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
         </div>
       }
     >
-      <form onSubmit={handleAdd} className={`${items.length > 0 ? 'mb-2' : ''} relative`}>
+      <form onSubmit={handleAdd} className={`${items.length > 0 || showQuickAdd ? 'mb-2' : ''} relative`}>
         <input
           type="text"
           value={input}
@@ -199,7 +199,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
       </form>
 
       {showQuickAdd && (
-        <div className="mb-3">
+        <div className={`${items.length > 0 ? 'mb-2' : ''}`}>
           {CATEGORY_ORDER.map((categoryKey) => {
             const category = QUICK_ADD_CATEGORIES[categoryKey];
             return (

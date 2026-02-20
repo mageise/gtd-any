@@ -59,7 +59,7 @@ function formatTime(timestamp: number): string {
     return `Today ${timeStr}`;
   }
   if (isYesterday) {
-    return `Yesterday ${timeStr}`;
+    return `Yday ${timeStr}`;
   }
   return date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + timeStr;
 }
@@ -168,7 +168,7 @@ export function StockPrice() {
         onBlur={handleConfigSave}
         onKeyDown={(e) => e.key === 'Enter' && handleConfigSave()}
         placeholder="Enter new ticker..."
-        className="w-full text-sm bg-[var(--color-bg-primary)] border border-[var(--color-bg-tertiary)] rounded px-3 py-2 outline-none focus:border-[var(--color-accent)]"
+        className="w-full text-base bg-[var(--color-bg-primary)] border border-[var(--color-bg-tertiary)] rounded px-3 py-2 outline-none focus:border-[var(--color-accent)]"
       />
     </div>
   );

@@ -9,7 +9,7 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 3. **Today's Tasks** - Checklist with completion tracking (inline editing)
 4. **Shopping List** - Grocery list with quick-add categories and quantity prefixes (inline editing)
 5. **Time Blocks** - 3 preset time blocks with Pomodoro-style timers (editable titles)
-6. **BTC Price** - Live Bitcoin price (EUR), manual refresh, shows change vs previous day
+6. **BTC Price** - Live Bitcoin price (EUR), manual refresh, shows % change vs previous day
 7. **Stock Price** - Multiple stock tracking, manual refresh, shows % change vs previous day, dynamic currency, horizontal slider for navigation, config mode for managing stock list
 8. **Tetris** - Fully playable Tetris with tap controls, fullscreen mode with Give Up button, high score tracking
 
@@ -45,7 +45,7 @@ All data persisted in localStorage:
 - `daily-dashboard-tasks`
 - `daily-dashboard-shopping`
 - `daily-dashboard-finance`
-- `daily-dashboard-stocks`
+- `daily-dashboard-stock`
 
 ### Project Structure
 ```
@@ -96,9 +96,9 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 
 ### Widgets
 - [ ] Add more widgets (Daily Focus/Intention, Habit Tracker, Calendar, Notes)
-- [ ] Make widgets reorderable (drag-and-drop)
+- [ ] Make widgets reorderable (drag-and-drop vs. up/down arrows)
 - [ ] Allow enabling/disabling widgets
-- [ ] Allow full screen mode for full + tall widgets (e.g. games)
+- [ ] Enable full-screen mode for certain widgets (e.g. games)
 
 ### Daily Quote
 - [ ] Find other API (api.quotable.io often unavailable)
@@ -110,28 +110,24 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Due dates
 - [ ] Recurring tasks
 
-### Time Blocks
-- [ ] Link Time Blocks to Tasks (auto-suggest related tasks when block starts)
-- [ ] Add custom time blocks (not just presets)
-- [ ] Break timer between blocks
+### Pomodoro Session
+- [ ] Create a simple widget to time Pomodoro-Sessions (rename/reuse Time Blocks)
+- [ ] Two variants: Simple = 25 min timer + 5 min pause, Session = like 4x Simple in a row
+- [ ] Running timer will show time (counting down) + surrounding circle in the middle of the screen
+- [ ] The circle on the other hand will fill up (green color) while time is running
+- [ ] Circle + Time will be clickable, user can click to pause/resume
+- [ ] Allow full-screen mode
+- [ ] Optional: configurable session time + pause length
 
 ### BTC & Stock Price
 - [ ] Add price alerts (notify when price crosses threshold)
 
-### Mini Games
-Quick brain breaks without leaving the app. Productivity-boosting for quick mental resets or decision making.
-
-#### Tetris
+### Tetris
 - [ ] Show next piece preview
 - [ ] Ghost piece (where piece will land)
 - [ ] Pause feature (where to add action in UI?)
 - [ ] Standard Tetris scoring (100/300/500/800 for 1/2/3/4 lines)
 - [ ] Rotate counter-clockwise
-
-#### Other Games
-- [ ] Coin flip - Binary decisions (do X or Y?)
-- [ ] Dice roll - Random selection (which task first?)
-- [ ] Random number - Pick from a range
 
 ### Messages
 - [ ] Create simple widget to display messages to the user
@@ -147,6 +143,11 @@ Quick brain breaks without leaving the app. Productivity-boosting for quick ment
 - [ ] Dark/Light mode toggle (currently system-only)
 - [ ] Widget animations
 - [ ] Keyboard shortcuts
+
+### Other
+- [ ] Coin flip - Binary decisions (do X or Y?)
+- [ ] Dice roll - Random selection (which task first?)
+- [ ] Random number - Pick from a range
 
 ## PWA Installation
 

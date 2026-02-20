@@ -34,7 +34,7 @@ function formatTime(timestamp: number): string {
     return `Today ${timeStr}`;
   }
   if (isYesterday) {
-    return `Yesterday ${timeStr}`;
+    return `Yday ${timeStr}`;
   }
   return date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + timeStr;
 }
@@ -44,6 +44,13 @@ function isNewDay(timestamp: number | null): boolean {
   const lastDate = new Date(timestamp);
   const today = new Date();
   return lastDate.toDateString() !== today.toDateString();
+}
+
+function calculateChange(current: number, previous: number | undefined): { percent: number; direction: 'up' | 'down' | 'none' } | null {
+  if (!previous || previous === 0) return null;
+  const percent = ((current - previous) / previous) * 100;
+  const direction = percent > 0 ? 'up' : percent < 0 ? 'down' : 'none';
+  return { percent: Math.abs(percent), direction };
 }
 
 export function BTCPrice() {
@@ -82,11 +89,17 @@ export function BTCPrice() {
     if (!finance.lastUpdated) return 'Tap icon to fetch price';
 
     const time = formatTime(finance.lastUpdated);
-    if (finance.previousPrice && finance.btcPrice > finance.previousPrice) {
-      return <span>{time} <span className="text-emerald-500">▲</span></span>;
-    }
-    if (finance.previousPrice && finance.btcPrice < finance.previousPrice) {
-      return <span>{time} <span className="text-rose-500">▼</span></span>;
+    const change = calculateChange(finance.btcPrice, finance.previousPrice);
+
+    if (change) {
+      const arrow = change.direction === 'up' ? '▲' : change.direction === 'down' ? '▼' : '';
+      const colorClass = change.direction === 'up' ? 'text-emerald-500' : change.direction === 'down' ? 'text-rose-500' : '';
+      const percentStr = change.percent.toFixed(2) + '%';
+      return (
+        <span>
+          {time} <span className={colorClass}>{arrow} {percentStr}</span>
+        </span>
+      );
     }
     return time;
   };

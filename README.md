@@ -8,7 +8,7 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 2. **Inbox Zero** - Quick capture → graduate to tasks or delete (inline editing)
 3. **Today's Tasks** - Checklist with completion tracking (inline editing)
 4. **Shopping List** - Grocery list with quick-add categories and quantity prefixes (inline editing)
-5. **Time Blocks** - 3 preset time blocks with Pomodoro-style timers (editable titles)
+5. **Pomodoro Session** - Simple (25+5 min cycles) or Session (4x work + breaks) mode, configurable durations, fullscreen focus view
 6. **BTC Price** - Live Bitcoin price (EUR), manual refresh, shows % change vs previous day
 7. **Stock Price** - Multiple stock tracking, manual refresh, shows % change vs previous day, dynamic currency, horizontal slider for navigation, config mode for managing stock list
 8. **Tetris** - Fully playable Tetris with tap controls, fullscreen mode with Give Up button, high score tracking
@@ -34,13 +34,20 @@ State is persisted in localStorage.
 
 Some widgets support config mode with additional settings (e.g., Stock Price allows adding/removing stocks).
 
+### Fullscreen Mode
+Some widgets support fullscreen mode for a distraction-free experience. Currently supported by:
+- **Pomodoro Session** - Focus view with circular progress timer, click to pause/resume
+- **Tetris** - Immersive gameplay
+
+To enter fullscreen, click the expand icon in the widget header. Press Escape or click the collapse icon to exit.
+
 ## Architecture
 
 ### Data Storage
 All data persisted in localStorage:
 - `daily-dashboard-mode` - Current view mode (regular/minimal/config)
 - `daily-dashboard-quote` / `daily-dashboard-quote-date`
-- `daily-dashboard-timeblocks`
+- `daily-dashboard-pomodoro`
 - `daily-dashboard-inbox`
 - `daily-dashboard-tasks`
 - `daily-dashboard-shopping`
@@ -53,7 +60,7 @@ src/
 ├── components/
 │   ├── widgets/
 │   │   ├── DailyQuote.tsx
-│   │   ├── TimeBlocks.tsx
+│   │   ├── Pomodoro.tsx
 │   │   ├── InboxZero.tsx
 │   │   ├── TasksToday.tsx
 │   │   ├── ShoppingList.tsx
@@ -74,7 +81,7 @@ src/
 
 ### TypeScript Types (src/types/index.ts)
 - `Quote` - text, author
-- `TimeBlock` - id, title, duration (min), remaining (sec), isRunning
+- `PomodoroSession` - id, duration (min), remaining (sec), isRunning, isBreak, sessionsCompleted, mode, workDuration, breakDuration, totalSessions
 - `InboxItem` - id, text, createdAt
 - `Task` - id, text, completed, createdAt
 - `ShoppingItem` - id, text, completed, createdAt
@@ -98,7 +105,6 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Add more widgets (Daily Focus/Intention, Habit Tracker, Calendar, Notes)
 - [ ] Make widgets reorderable (drag-and-drop vs. up/down arrows)
 - [ ] Allow enabling/disabling widgets
-- [ ] Enable full-screen mode for certain widgets (e.g. games)
 
 ### Daily Quote
 - [ ] Find other API (api.quotable.io often unavailable)
@@ -109,15 +115,6 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Priority levels
 - [ ] Due dates
 - [ ] Recurring tasks
-
-### Pomodoro Session
-- [ ] Create a simple widget to time Pomodoro-Sessions (rename/reuse Time Blocks)
-- [ ] Two variants: Simple = 25 min timer + 5 min pause, Session = like 4x Simple in a row
-- [ ] Running timer will show time (counting down) + surrounding circle in the middle of the screen
-- [ ] The circle on the other hand will fill up (green color) while time is running
-- [ ] Circle + Time will be clickable, user can click to pause/resume
-- [ ] Allow full-screen mode
-- [ ] Optional: configurable session time + pause length
 
 ### BTC & Stock Price
 - [ ] Add price alerts (notify when price crosses threshold)

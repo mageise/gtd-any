@@ -3,14 +3,6 @@ export interface Quote {
   author: string;
 }
 
-export interface TimeBlock {
-  id: string;
-  title: string;
-  duration: number; // in minutes
-  remaining: number; // in seconds
-  isRunning: boolean;
-}
-
 export interface InboxItem {
   id: string;
   text: string;
@@ -51,8 +43,21 @@ export interface StockList {
   activeIndex: number;
 }
 
+export interface PomodoroSession {
+  id: string;
+  duration: number; // in minutes
+  remaining: number; // in seconds
+  isRunning: boolean;
+  isBreak: boolean;
+  sessionsCompleted: number;
+  mode: 'simple' | 'session';
+  workDuration: number; // in minutes
+  breakDuration: number; // in minutes
+  totalSessions: number;
+}
+
 export interface AppState {
-  timeBlocks: TimeBlock[];
+  pomodoro: PomodoroSession | null;
   inbox: InboxItem[];
   tasks: Task[];
   finance: FinanceData;

@@ -9,6 +9,7 @@ import { ShoppingList } from './components/widgets/ShoppingList';
 import { BTCPrice } from './components/widgets/BTCPrice';
 import { StockPrice } from './components/widgets/StockPrice';
 import { Tetris } from './components/widgets/Tetris';
+import { Pomodoro } from './components/widgets/Pomodoro';
 import type { Task, ShoppingItem } from './types';
 
 const TASKS_KEY = 'daily-dashboard-tasks';
@@ -31,6 +32,9 @@ function App() {
         </WidgetPair>
         <ErrorBoundary>
           <Tetris />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Pomodoro />
         </ErrorBoundary>
         <ErrorBoundary>
           <InboxZero setTasks={setTasks} />

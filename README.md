@@ -23,24 +23,34 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 
 ## Features
 
-### Mode Toggle
-Three view modes controlled via the button in the config area (cycles: ○ → ◐ → ◉):
+### View Mode Toggle
+Two view modes controlled via the button in the settings area:
 
-- **Regular (○)** - Full widget with title, content, and footer
+- **Regular (●)** - Full widgets with title, content, and footer
 - **Minimal (◐)** - Content only, reduced padding for maximum screen space
-- **Config (◉)** - Full widget with additional config content, shows widget management panel
 
 State is persisted in localStorage.
 
-Some widgets support in-widget config mode with additional settings (e.g., Stock Price allows adding/removing stocks, Pomodoro allows adjusting durations).
+### Config Mode
+Some widgets support in-widget config mode with additional settings (e.g. Stock Price allows changing ticker symbol, Pomodoro allows adjusting durations).
 
-### Config Area
-A dedicated config panel at the bottom of the dashboard provides dashboard-level configuration:
+To enter config mode, click "Open settings" in the settings area. Click "Close settings" to exit.
 
-- **Always visible**: Version number and mode toggle button
-- **Config mode**: Widget management panel with:
-  - Enable/disable widgets
-  - Reorder widgets with up/down arrows
+### Settings Area
+A dedicated settings panel at the bottom of the dashboard provides dashboard-level configuration:
+
+**Regular mode:**
+- Left: "X/Y widgets active" count
+- Middle: ● button (switch to minimal mode)
+- Right: "Open settings" button
+
+**Minimal mode:**
+- Centered ◐ button (switch to regular mode)
+
+**Config mode:**
+- Left: Version number
+- Right: "Close settings" button
+- Content: Widget list with enable/disable toggles and up/down arrows for reordering
 
 Widget order and visibility are persisted in localStorage.
 
@@ -55,7 +65,7 @@ To enter fullscreen, click the expand icon in the widget header. Press Escape or
 
 ### Data Storage
 All data persisted in localStorage:
-- `daily-dashboard-mode` - Current view mode (regular/minimal/config)
+- `daily-dashboard-mode` - Current view mode (regular/minimal)
 - `daily-dashboard-config` - Widget order and visibility
 - `daily-dashboard-quote` / `daily-dashboard-quote-date`
 - `daily-dashboard-pomodoro`
@@ -139,6 +149,8 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 
 ### Shopping List
 - [ ] Allow reordering items (drag-and-drop)
+- [ ] Add fullscreen mode (no distractions)
+- [ ] Fullscreen: title, simple input (no quick-adds), list of scrollable items spanning to the bottom
 
 ### Tetris
 - [ ] Show next piece preview
@@ -152,7 +164,7 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Integrated within the Daily Dashboard app (can listen to other widgets)
 - [ ] Examples: "BTC price updated at ...", "API ... is down", "Price alert for ..."
 
-### Config
+### Settings
 - [ ] Reset to defaults (if necessary at some stage)
 
 ### Data

@@ -55,10 +55,44 @@ export function useMode(): Mode {
   return context.mode;
 }
 
+export function useSetMode(): (mode: Mode) => void {
+  const context = useContext(ModeContext);
+  if (!context) {
+    throw new Error('useSetMode must be used within ModeProvider');
+  }
+  return context.setMode;
+}
+
 export function useModeToggle(): () => void {
   const context = useContext(ModeContext);
   if (!context) {
     throw new Error('useModeToggle must be used within ModeProvider');
   }
   return context.toggleMode;
+}
+
+export function useModeActions() {
+  const context = useContext(ModeContext);
+  if (!context) {
+    throw new Error('useModeActions must be used within ModeProvider');
+  }
+
+  const toggleMinimal = () => {
+    const newMode: Mode = context.mode === 'regular' ? 'minimal' : 'regular';
+    context.setMode(newMode);
+  };
+
+  const openConfig = () => {
+    context.setMode('config');
+  };
+
+  const closeConfig = () => {
+    context.setMode('regular');
+  };
+
+  return {
+    toggleMinimal,
+    openConfig,
+    closeConfig,
+  };
 }

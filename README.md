@@ -7,7 +7,7 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 1. **Daily Quote** - Inspirational quote that refreshes each day (API: quotable.io, fallback to local array)
 2. **Inbox Zero** - Quick capture → graduate to tasks or delete (inline editing)
 3. **Today's Tasks** - Checklist with completion tracking (inline editing)
-4. **Shopping List** - Grocery list with quick-add categories and quantity prefixes (inline editing)
+4. **Shopping List** - Grocery list with quick-add categories, quantity prefixes, and configurable default template (inline editing, Config mode)
 5. **Pomodoro Session** - Simple (25+5 min cycles) or Session (4x work + breaks) mode, configurable durations, fullscreen focus view
 6. **BTC Price** - Live Bitcoin price (EUR), manual refresh, shows % change vs previous day
 7. **Stock Price** - Multiple stock tracking, manual refresh, shows % change vs previous day, dynamic currency, horizontal slider for navigation, config mode for managing stock list
@@ -51,6 +51,7 @@ All data persisted in localStorage:
 - `daily-dashboard-inbox`
 - `daily-dashboard-tasks`
 - `daily-dashboard-shopping`
+- `daily-dashboard-shopping-defaults` - Default template items for Shopping List
 - `daily-dashboard-finance`
 - `daily-dashboard-stock`
 
@@ -109,6 +110,7 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 ### Daily Quote
 - [ ] Find other API (api.quotable.io often unavailable)
 - [ ] Refresh on clicking on the quote itself (works as button)
+- [ ] Consolidate `daily-dashboard-quote` and `daily-dashboard-quote-date` into single key
 
 ### Inbox & Tasks
 - [ ] Task categories/tags
@@ -118,6 +120,10 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 
 ### BTC & Stock Price
 - [ ] Add price alerts (notify when price crosses threshold)
+- [ ] Add latest news on BTC or stock
+
+### Shopping List
+- [ ] Allow reordering items (drag-and-drop)
 
 ### Tetris
 - [ ] Show next piece preview

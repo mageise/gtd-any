@@ -1,7 +1,9 @@
-/* eslint-disable react-hooks/purity */
 import { useState, useRef, useEffect } from 'react';
 import { WidgetContainer } from '../WidgetContainer';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import type { ShoppingItem } from '../../types';
+
+const SHOPPING_DEFAULTS_KEY = 'daily-dashboard-shopping-defaults';
 
 interface ShoppingListProps {
   items: ShoppingItem[];
@@ -17,14 +19,14 @@ interface QuickAddCategory {
 }
 
 const QUICK_ADD_CATEGORIES: Record<CategoryKey, QuickAddCategory> = {
-  dairy: { label: 'Dairy', color: 'bg-blue-500', items: ['Milk', 'Eggs', 'Butter', 'Cheese', 'Cream cheese', 'Yoghurt', 'Ice cream'] },
-  meat: { label: 'Meat', color: 'bg-red-700', items: ['Chicken', 'Beef', 'Pork', 'Salami'] },
-  carbs: { label: 'Carbs', color: 'bg-amber-500', items: ['Rice', 'Pasta', 'Noodles', 'Bread'] },
-  produce: { label: 'Produce', color: 'bg-green-500', items: ['Tomatoes', 'Onions', 'Carrots', 'Cucumber', 'Peppers', 'Lettuce'] },
-  fruit: { label: 'Fruit', color: 'bg-purple-500', items: ['Apples', 'Bananas', 'Grapes', 'Oranges', 'Berries'] },
-  drinks: { label: 'Drinks', color: 'bg-cyan-500', items: ['Coffee', 'Tea', 'Juice', 'Water', 'Soda'] },
-  other: { label: 'Other', color: 'bg-orange-500', items: ['Nutella', 'Ketchup', 'Dressing', 'Egg salad'] },
-  ready: { label: 'Ready', color: 'bg-pink-500', items: ['Pizza', 'Desserts'] },
+  dairy: { label: 'Dairy', color: 'bg-blue-500', items: ['Milch', 'Eier', 'Butter', 'Käse', 'Frischkäse', 'Naturjoghurt', 'Eis', 'Quark'] },
+  meat: { label: 'Meat', color: 'bg-red-700', items: ['Hähnchen', 'Rind', 'Schwein', 'Wurst', 'Würstchen'] },
+  carbs: { label: 'Carbs', color: 'bg-amber-500', items: ['Reis', 'Kartoffeln', 'Nudeln', 'Schwarzbrot', 'Toastbrot', 'Brötchen'] },
+  produce: { label: 'Produce', color: 'bg-green-500', items: ['Tomaten', 'Zwiebeln', 'Möhren', 'Gurke', 'Paprika', 'Salat', 'Erbmos'] },
+  fruit: { label: 'Fruit', color: 'bg-purple-500', items: ['Äpfel', 'Bananen', 'Weintrauben', 'Orangen', 'Blaubeeren'] },
+  drinks: { label: 'Drinks', color: 'bg-cyan-500', items: ['Kaffee', 'Tee', 'Saft', 'Mineralwasser', 'Eistee', 'Kakao', 'Im Nu'] },
+  other: { label: 'Other', color: 'bg-orange-500', items: ['Nutella', 'Ketchup', 'Dressing', 'Eiersalat'] },
+  ready: { label: 'Ready', color: 'bg-pink-500', items: ['Pizza', 'Desserts', 'Miracoli'] },
 };
 
 const CATEGORY_ORDER: CategoryKey[] = ['dairy', 'meat', 'carbs', 'produce', 'fruit', 'drinks', 'other', 'ready'];
@@ -35,6 +37,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const [pendingToggle, setPendingToggle] = useState<string | null>(null);
+  const [defaults, setDefaults] = useLocalStorage<string>(SHOPPING_DEFAULTS_KEY, '');
   const editInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -45,7 +48,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
 
   const sortedItems = [...items].sort((a, b) => {
     if (a.completed !== b.completed) return a.completed ? 1 : -1;
-    return b.createdAt - a.createdAt;
+    return a.createdAt - b.createdAt;
   });
 
   const displayItems = pendingToggle
@@ -70,13 +73,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
     e.preventDefault();
     if (!input.trim()) return;
     
-    const newItem: ShoppingItem = {
-      id: Date.now().toString(),
-      text: input.trim(),
-      completed: false,
-      createdAt: Date.now(),
-    };
-    setItems((prev: ShoppingItem[]) => [newItem, ...prev]);
+    handleQuickAdd(input.trim());
     setInput('');
   };
 
@@ -111,7 +108,7 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
         completed: false,
         createdAt: now,
       };
-      return [newItem, ...prev];
+      return [...prev, newItem];
     });
   };
 
@@ -157,16 +154,86 @@ export function ShoppingList({ items, setItems }: ShoppingListProps) {
     setItems([]);
   };
 
+  const loadDefaults = () => {
+    if (!defaults.trim()) return;
+    
+    const defaultItems = defaults.split('\n').filter((line) => line.trim());
+    const now = Date.now();
+    
+    setItems((prev: ShoppingItem[]) => {
+      let updated = [...prev];
+      
+      for (let i = 0; i < defaultItems.length; i++) {
+        const itemName = defaultItems[i].trim();
+        const nameLower = itemName.toLowerCase();
+        
+        const existingItem = updated.find((item: ShoppingItem) => {
+          const textLower = item.text.toLowerCase();
+          return textLower === nameLower || textLower.endsWith(' ' + nameLower);
+        });
+        
+        if (existingItem) {
+          const match = existingItem.text.match(/^(\d+)x (.+)$/);
+          if (match) {
+            const quantity = parseInt(match[1], 10);
+            const name = match[2];
+            updated = updated.map((item: ShoppingItem) => 
+              item.id === existingItem.id ? { ...item, text: `${quantity + 1}x ${name}` } : item
+            );
+          } else {
+            updated = updated.map((item: ShoppingItem) => 
+              item.id === existingItem.id ? { ...item, text: `2x ${itemName}` } : item
+            );
+          }
+        } else {
+          const newItem: ShoppingItem = {
+            id: (now + i).toString(),
+            text: itemName,
+            completed: false,
+            createdAt: now + i,
+          };
+          updated = [...updated, newItem];
+        }
+      }
+      
+      return updated;
+    });
+  };
+
   const completedCount = items.filter((i: ShoppingItem) => i.completed).length;
   const totalCount = items.length;
+
+  const configContent = (
+    <div className="space-y-2">
+      <label className="text-xs text-[var(--color-text-secondary)]">
+        Default Items (one per line)
+      </label>
+      <textarea
+        value={defaults}
+        onChange={(e) => setDefaults(e.target.value)}
+        placeholder="Milk&#10;Eggs&#10;Bread"
+        className="w-full h-24 px-2 py-1 bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] rounded-lg text-sm outline-none resize-none placeholder:text-[var(--color-text-secondary)]"
+      />
+    </div>
+  );
 
   return (
     <WidgetContainer 
       title="Shopping List"
+      configContent={configContent}
       footer={
         <div className="flex justify-between items-center w-full">
           {items.length === 0 ? (
-            <span className="text-xs text-[var(--color-text-secondary)]">No items. Add one above or use quick add!</span>
+            <>
+              <span className="text-xs text-[var(--color-text-secondary)]">No items. Add above, quick or defaults!</span>
+              <button
+                onClick={loadDefaults}
+                disabled={!defaults.trim()}
+                className="text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Load defaults
+              </button>
+            </>
           ) : (
             <>
               <span className="text-xs text-[var(--color-text-secondary)]">{completedCount}/{totalCount} item{totalCount !== 1 ? 's' : ''} bought</span>

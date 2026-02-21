@@ -54,6 +54,7 @@ export interface PomodoroSession {
   workDuration: number; // in minutes
   breakDuration: number; // in minutes
   totalSessions: number;
+  endTime: number | null; // timestamp when current session ends
 }
 
 export interface AppState {

@@ -16,6 +16,7 @@ const DEFAULT_POMODORO: PomodoroSession = {
   workDuration: 25,
   breakDuration: 5,
   totalSessions: 4,
+  endTime: null,
 };
 
 function formatTime(seconds: number): string {
@@ -238,21 +239,35 @@ export function Pomodoro() {
   useEffect(() => {
     if (!session.isRunning) return;
 
+    if (!session.endTime) {
+      setSession((prev: PomodoroSession) => ({
+        ...prev,
+        endTime: Date.now() + prev.remaining * 1000,
+      }));
+      return;
+    }
+
     const interval = setInterval(() => {
       setSession((prev: PomodoroSession) => {
-        if (prev.remaining <= 0) {
+        if (!prev.endTime) return prev;
+
+        const newRemaining = Math.max(0, Math.ceil((prev.endTime - Date.now()) / 1000));
+
+        if (newRemaining <= 0) {
           if (prev.mode === 'simple') {
+            const newDuration = !prev.isBreak ? prev.breakDuration : prev.workDuration;
             return {
               ...prev,
               isBreak: !prev.isBreak,
-              remaining: (!prev.isBreak ? prev.breakDuration : prev.workDuration) * 60,
-              duration: !prev.isBreak ? prev.breakDuration : prev.workDuration,
+              remaining: newDuration * 60,
+              duration: newDuration,
+              endTime: Date.now() + newDuration * 60 * 1000,
             };
           } else {
             if (!prev.isBreak) {
               const newSessionsCompleted = prev.sessionsCompleted + 1;
               if (newSessionsCompleted >= prev.totalSessions) {
-                return { ...prev, isRunning: false, sessionsCompleted: 0, isBreak: false, remaining: prev.workDuration * 60, duration: prev.workDuration };
+                return { ...prev, isRunning: false, sessionsCompleted: 0, isBreak: false, remaining: prev.workDuration * 60, duration: prev.workDuration, endTime: null };
               }
               return {
                 ...prev,
@@ -260,6 +275,7 @@ export function Pomodoro() {
                 remaining: prev.breakDuration * 60,
                 duration: prev.breakDuration,
                 sessionsCompleted: newSessionsCompleted,
+                endTime: Date.now() + prev.breakDuration * 60 * 1000,
               };
             } else {
               return {
@@ -267,19 +283,38 @@ export function Pomodoro() {
                 isBreak: false,
                 remaining: prev.workDuration * 60,
                 duration: prev.workDuration,
+                endTime: Date.now() + prev.workDuration * 60 * 1000,
               };
             }
           }
         }
-        return { ...prev, remaining: Math.max(0, prev.remaining - 1) };
+        return { ...prev, remaining: newRemaining };
       });
-    }, 1000);
+    }, 100);
 
     return () => clearInterval(interval);
-  }, [session.isRunning, session.mode, session.totalSessions, setSession]);
+  }, [session.isRunning, session.mode, session.totalSessions, session.endTime, setSession]);
 
   const handleToggle = () => {
-    setSession((prev: PomodoroSession) => ({ ...prev, isRunning: !prev.isRunning }));
+    setSession((prev: PomodoroSession) => {
+      if (prev.isRunning) {
+        const currentRemaining = prev.endTime
+          ? Math.max(0, Math.ceil((prev.endTime - Date.now()) / 1000))
+          : prev.remaining;
+        return {
+          ...prev,
+          isRunning: false,
+          remaining: currentRemaining,
+          endTime: null,
+        };
+      } else {
+        return {
+          ...prev,
+          isRunning: true,
+          endTime: Date.now() + prev.remaining * 1000,
+        };
+      }
+    });
   };
 
   const handleReset = () => {
@@ -290,25 +325,34 @@ export function Pomodoro() {
       isRunning: false,
       isBreak: false,
       sessionsCompleted: 0,
+      endTime: null,
     }));
   };
 
   const handleWorkChange = (workDuration: number) => {
-    setSession((prev: PomodoroSession) => ({
-      ...prev,
-      workDuration,
-      duration: prev.isBreak ? prev.duration : workDuration,
-      remaining: prev.isBreak ? prev.remaining : workDuration * 60,
-    }));
+    setSession((prev: PomodoroSession) => {
+      const newRemaining = prev.isBreak ? prev.remaining : workDuration * 60;
+      return {
+        ...prev,
+        workDuration,
+        duration: prev.isBreak ? prev.duration : workDuration,
+        remaining: newRemaining,
+        endTime: prev.isRunning ? Date.now() + newRemaining * 1000 : prev.endTime,
+      };
+    });
   };
 
   const handleBreakChange = (breakDuration: number) => {
-    setSession((prev: PomodoroSession) => ({
-      ...prev,
-      breakDuration,
-      duration: prev.isBreak ? breakDuration : prev.duration,
-      remaining: prev.isBreak ? breakDuration * 60 : prev.remaining,
-    }));
+    setSession((prev: PomodoroSession) => {
+      const newRemaining = prev.isBreak ? breakDuration * 60 : prev.remaining;
+      return {
+        ...prev,
+        breakDuration,
+        duration: prev.isBreak ? breakDuration : prev.duration,
+        remaining: newRemaining,
+        endTime: prev.isRunning ? Date.now() + newRemaining * 1000 : prev.endTime,
+      };
+    });
   };
 
   const handleSessionsChange = (totalSessions: number) => {
@@ -324,6 +368,7 @@ export function Pomodoro() {
       sessionsCompleted: 0,
       remaining: prev.workDuration * 60,
       duration: prev.workDuration,
+      endTime: null,
     }));
   };
 

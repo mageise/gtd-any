@@ -64,3 +64,13 @@ export interface AppState {
   finance: FinanceData;
   quote: Quote | null;
 }
+
+export interface WidgetConfig {
+  id: string;
+  name: string;
+  enabled: boolean;
+}
+
+export interface AppConfig {
+  widgets: WidgetConfig[];
+}

@@ -24,15 +24,25 @@ A beautiful, mobile-first personal dashboard with productivity widgets. Built wi
 ## Features
 
 ### Mode Toggle
-Three view modes controlled via the button in the footer (cycles: ○ → ◐ → ◉):
+Three view modes controlled via the button in the config area (cycles: ○ → ◐ → ◉):
 
 - **Regular (○)** - Full widget with title, content, and footer
 - **Minimal (◐)** - Content only, reduced padding for maximum screen space
-- **Config (◉)** - Full widget with additional config content, WidgetPairs stack vertically for more space
+- **Config (◉)** - Full widget with additional config content, shows widget management panel
 
 State is persisted in localStorage.
 
-Some widgets support config mode with additional settings (e.g., Stock Price allows adding/removing stocks).
+Some widgets support in-widget config mode with additional settings (e.g., Stock Price allows adding/removing stocks, Pomodoro allows adjusting durations).
+
+### Config Area
+A dedicated config panel at the bottom of the dashboard provides dashboard-level configuration:
+
+- **Always visible**: Version number and mode toggle button
+- **Config mode**: Widget management panel with:
+  - Enable/disable widgets
+  - Reorder widgets with up/down arrows
+
+Widget order and visibility are persisted in localStorage.
 
 ### Fullscreen Mode
 Some widgets support fullscreen mode for a distraction-free experience. Currently supported by:
@@ -46,6 +56,7 @@ To enter fullscreen, click the expand icon in the widget header. Press Escape or
 ### Data Storage
 All data persisted in localStorage:
 - `daily-dashboard-mode` - Current view mode (regular/minimal/config)
+- `daily-dashboard-config` - Widget order and visibility
 - `daily-dashboard-quote` / `daily-dashboard-quote-date`
 - `daily-dashboard-pomodoro`
 - `daily-dashboard-inbox`
@@ -70,10 +81,12 @@ src/
 │   │   └── Tetris.tsx
 │   ├── Layout.tsx
 │   ├── WidgetContainer.tsx
-│   └── WidgetPair.tsx
+│   ├── WidgetPair.tsx
+│   └── ConfigArea.tsx
 ├── hooks/
 │   ├── useLocalStorage.ts
-│   └── useMode.tsx
+│   ├── useMode.tsx
+│   └── useAppConfig.ts
 ├── types/
 │   └── index.ts
 ├── App.tsx
@@ -89,6 +102,8 @@ src/
 - `FinanceData` - btcPrice, previousPrice, lastUpdated
 - `StockData` - ticker, stockPrice, previousPrice, lastUpdated, companyName, currency
 - `StockList` - stocks (array), activeIndex
+- `WidgetConfig` - id, name, enabled
+- `AppConfig` - widgets (array)
 
 ## Issues
 
@@ -137,6 +152,9 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Integrated within the Daily Dashboard app (can listen to other widgets)
 - [ ] Examples: "BTC price updated at ...", "API ... is down", "Price alert for ..."
 
+### Config
+- [ ] Reset to defaults (if necessary at some stage)
+
 ### Data
 - [ ] Export/Import data (JSON)
 - [ ] Cloud sync (Firebase/Supabase) for cross-device
@@ -151,6 +169,16 @@ If an API becomes unavailable or blocked, the widget will display cached data or
 - [ ] Coin flip - Binary decisions (do X or Y?)
 - [ ] Dice roll - Random selection (which task first?)
 - [ ] Random number - Pick from a range
+
+## Interesting open/public APIs
+Excerpt from the most popular APIs from https://www.freepublicapis.com/tags/popular and https://publicapis.dev.
+- [The World Bank](https://datahelpdesk.worldbank.org/knowledgebase/topics/125589)
+- [NASA](https://api.nasa.gov) (API key, free)
+- [Financial Data](https://financialdata.net/documentation) (API key, partly free)
+- [Skyscanner](https://developers.skyscanner.net) (API key, free)
+
+### API Hubs
+- [ApyHub](https://apyhub.com/catalog) (5 API calls + 10 AI calls free per day)
 
 ## PWA Installation
 
